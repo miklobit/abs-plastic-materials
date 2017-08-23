@@ -22,7 +22,6 @@ Created by Christopher Gearhart
 # system imports
 import bpy
 from bpy.props import *
-
 class LEGOMaterialsPanel(bpy.types.Panel):
     bl_space_type  = 'PROPERTIES'
     bl_region_type = 'WINDOW'

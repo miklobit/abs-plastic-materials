@@ -91,9 +91,19 @@ class appendLegoMaterials(bpy.types.Operator):
                 toImport.append(m)
 
             # append material from directory
+            newObj = None
+            if len(scn.objects) == 0:
+                m = bpy.data.meshes.new("junk")
+                newObj = bpy.data.objects.new("junk", m)
+            current_mode = scn.objects[0].mode
+            bpy.ops.object.mode_set(mode='OBJECT')
             appendFrom(directory, filename=m)
+            bpy.ops.object.mode_set(mode=current_mode)
+            if newObj is not None:
+                bpy.data.objects.remove(newObj, True)
+                bpy.data.meshes.remove(m, True)
 
         if len(alreadyImported) > 0:
-            self.report({"WARNING"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("LEGO Plastic ", ""))
+            self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("LEGO Plastic ", ""))
 
         return{"FINISHED"}
