@@ -52,7 +52,7 @@ def register():
         'LEGO Plastic Dark Red',
         'LEGO Plastic Gold',
         'LEGO Plastic Green',
-        'LEGO Plastic Light Bluish Green',
+        'LEGO Plastic Light Bluish Grey',
         'LEGO Plastic Light Grey',
         'LEGO Plastic Lime',
         'LEGO Plastic Orange',
