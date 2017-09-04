@@ -31,10 +31,10 @@ class LEGOMaterialsPanel(bpy.types.Panel):
     # bl_category    = "LEGO Materials"
     COMPAT_ENGINES = {"CYCLES"}
 
-    @classmethod
-    def poll(cls, context):
-        """ Only renders UI if cycles render engine is used """
-        return bpy.context.scene.render.engine == 'CYCLES'
+    # @classmethod
+    # def poll(cls, context):
+    #     """ Only renders UI if cycles render engine is used """
+    #     return bpy.context.scene.render.engine == 'CYCLES'
 
     def draw(self, context):
         layout = self.layout
@@ -42,6 +42,9 @@ class LEGOMaterialsPanel(bpy.types.Panel):
 
         col = layout.column(align=True)
         row = col.row(align=True)
-        row.operator("scene.append_lego_materials", text="Import LEGO Materials", icon="IMPORT")
-        row = col.row(align=True)
-        # row.prop(scn, "replaceExisting")
+        if bpy.context.scene.render.engine == 'CYCLES':
+            row.operator("scene.append_lego_materials", text="Import LEGO Materials", icon="IMPORT")
+            # row = col.row(align=True)
+            # row.prop(scn, "replaceExisting")
+        else:
+            row.label("Switch to 'Cycles Render' engine")
