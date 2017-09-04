@@ -47,33 +47,7 @@ class appendLegoMaterials(bpy.types.Operator):
         directory  = blendfile + section
 
         # list of materials to append from 'lego_materials.blend'
-        materials = [
-            'LEGO Plastic Black',
-            'LEGO Plastic Blue',
-            'LEGO Plastic Bright Green',
-            'LEGO Plastic Brown',
-            'LEGO Plastic Dark Azur',
-            'LEGO Plastic Dark Green',
-            'LEGO Plastic Dark Grey',
-            'LEGO Plastic Dark Red',
-            'LEGO Plastic Gold',
-            'LEGO Plastic Green',
-            'LEGO Plastic Light Bluish Green',
-            'LEGO Plastic Light Grey',
-            'LEGO Plastic Lime',
-            'LEGO Plastic Orange',
-            'LEGO Plastic Pink',
-            'LEGO Plastic Purple',
-            'LEGO Plastic Red',
-            'LEGO Plastic Tan',
-            'LEGO Plastic Trans-Blue',
-            'LEGO Plastic Trans-Clear',
-            'LEGO Plastic Trans-Light Green',
-            'LEGO Plastic Trans-Red',
-            'LEGO Plastic Trans-Yellow',
-            'LEGO Plastic White',
-            'LEGO Plastic Yellow']
-
+        materials = bpy.props.lego_materials
         alreadyImported = []
         toImport = []
         for m in materials:
