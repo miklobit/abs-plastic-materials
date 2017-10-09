@@ -30,10 +30,10 @@ def appendFrom(directory, filename):
         filename=filename,
         directory=directory)
 
-class appendLegoMaterials(bpy.types.Operator):
-    """Append LEGO Materials from external blender file"""                      # blender will use this as a tooltip for menu items and buttons.
-    bl_idname = "scene.append_lego_materials"                                   # unique identifier for buttons and menu items to reference.
-    bl_label = "Append LEGO Materials"                                          # display name in the interface.
+class appendBrickMaterials(bpy.types.Operator):
+    """Append Brick Materials from external blender file"""                      # blender will use this as a tooltip for menu items and buttons.
+    bl_idname = "scene.append_brick_materials"                                   # unique identifier for buttons and menu items to reference.
+    bl_label = "Append Brick Materials"                                          # display name in the interface.
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
@@ -42,14 +42,22 @@ class appendLegoMaterials(bpy.types.Operator):
         # define file paths
         # addonsPath = bpy.utils.user_resource('SCRIPTS', "addons")
         addonPath = os.path.dirname(os.path.abspath(__file__))[:-8]
-        blendfile = "%(addonPath)s/lego_materials.blend" % locals()
+        blendfile = "%(addonPath)s/brick_materials.blend" % locals()
         section   = "/Material/"
         directory  = blendfile + section
 
-        # list of materials to append from 'lego_materials.blend'
-        materials = bpy.props.lego_materials
+        # list of materials to append from 'brick_materials.blend'
+        materials = bpy.props.brick_materials
         alreadyImported = []
         toImport = []
+
+        try:
+            for cm in scn.cmlist:
+                if cm.materialType == "Random":
+                    cm.brickMaterialsAreDirty = True
+        except:
+            pass
+
         for m in materials:
             # if material exists, remove or skip
             materialIdx = bpy.data.materials.find(m)
@@ -78,6 +86,6 @@ class appendLegoMaterials(bpy.types.Operator):
                 bpy.data.meshes.remove(m, True)
 
         if len(alreadyImported) > 0:
-            self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("LEGO Plastic ", ""))
+            self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
 
         return{"FINISHED"}

@@ -1,10 +1,10 @@
 bl_info = {
-    "name"        : "LEGO Materials",
+    "name"        : "Brick Materials",
     "author"      : "Christopher Gearhart <chris@bblanimation.com>",
     "version"     : (0, 1, 0),
     "blender"     : (2, 78, 0),
-    "description" : "Append LEGO Materials to current blender file with a simple click",
-    "location"    : "PROPERTIES > Materials > LEGO Materials",
+    "description" : "Append Brick Materials to current blender file with a simple click",
+    "location"    : "PROPERTIES > Materials > Brick Materials",
     # "warning"     : "Work in progress",
     "wiki_url"    : "",
     "tracker_url" : "",
@@ -41,42 +41,45 @@ props = bpy.props
 def register():
     bpy.utils.register_module(__name__)
 
-    bpy.props.lego_materials = [
-        'LEGO Plastic Black',
-        'LEGO Plastic Blue',
-        'LEGO Plastic Bright Green',
-        'LEGO Plastic Brown',
-        'LEGO Plastic Dark Azur',
-        'LEGO Plastic Dark Green',
-        'LEGO Plastic Dark Grey',
-        'LEGO Plastic Dark Red',
-        'LEGO Plastic Gold',
-        'LEGO Plastic Green',
-        'LEGO Plastic Light Bluish Grey',
-        'LEGO Plastic Light Grey',
-        'LEGO Plastic Lime',
-        'LEGO Plastic Orange',
-        'LEGO Plastic Pink',
-        'LEGO Plastic Purple',
-        'LEGO Plastic Red',
-        'LEGO Plastic Tan',
-        'LEGO Plastic Trans-Blue',
-        'LEGO Plastic Trans-Clear',
-        'LEGO Plastic Trans-Light Green',
-        'LEGO Plastic Trans-Red',
-        'LEGO Plastic Trans-Yellow',
-        'LEGO Plastic White',
-        'LEGO Plastic Yellow']
+    bpy.props.brick_materials = [
+        'ABS Plastic Black',
+        'ABS Plastic Blue',
+        'ABS Plastic Bright Green',
+        'ABS Plastic Brown',
+        'ABS Plastic Dark Azur',
+        'ABS Plastic Dark Green',
+        'ABS Plastic Dark Grey',
+        'ABS Plastic Dark Red',
+        'ABS Plastic Gold',
+        'ABS Plastic Green',
+        'ABS Plastic Light Bluish Grey',
+        'ABS Plastic Light Grey',
+        'ABS Plastic Lime',
+        'ABS Plastic Orange',
+        'ABS Plastic Pink',
+        'ABS Plastic Purple',
+        'ABS Plastic Red',
+        'ABS Plastic Tan',
+        'ABS Plastic Trans-Blue',
+        'ABS Plastic Trans-Clear',
+        'ABS Plastic Trans-Light Green',
+        'ABS Plastic Trans-Red',
+        'ABS Plastic Trans-Yellow',
+        'ABS Plastic White',
+        'ABS Plastic Yellow']
 
     bpy.types.Scene.replaceExisting = BoolProperty(
         name="Replace Existing",
-        description="Replace existing 'LEGO Plastic *' materials when importing",
+        description="Replace existing 'ABS Plastic *' materials when importing",
         default=False)
+
+    bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
 def unregister():
     Scn = bpy.types.Scene
 
     del Scn.replaceExisting
+    del Scn.isBrickMaterialsInstalled
 
     bpy.utils.unregister_module(__name__)
 
