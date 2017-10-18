@@ -19,9 +19,13 @@ Created by Christopher Gearhart
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-# system imports
+# System imports
 import bpy
 from bpy.props import *
+
+# updater import
+from .. import addon_updater_ops
+
 class ABSPlasticMaterialsPanel(bpy.types.Panel):
     bl_space_type  = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -40,11 +44,12 @@ class ABSPlasticMaterialsPanel(bpy.types.Panel):
         layout = self.layout
         scn = context.scene
 
+		# draw auto-updater update box
+        addon_updater_ops.update_notice_box_ui(self, context)
+
         col = layout.column(align=True)
         row = col.row(align=True)
         if bpy.context.scene.render.engine == 'CYCLES':
             row.operator("scene.append_abs_plastic_materials", text="Import ABS Plastic Materials", icon="IMPORT")
-            # row = col.row(align=True)
-            # row.prop(scn, "replaceExisting")
         else:
             row.label("Switch to 'Cycles Render' engine")

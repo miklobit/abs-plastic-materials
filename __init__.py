@@ -31,15 +31,23 @@ Created by Christopher Gearhart
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-# system imports
+# Blender imports
 import bpy
 from bpy.props import *
+props = bpy.props
+
+# Addon imports
 from .ui import *
 from .buttons import *
-props = bpy.props
+from .lib import *
+
+# updater import
+from . import addon_updater_ops
 
 def register():
     bpy.utils.register_module(__name__)
+
+    bpy.props.abs_plastic_materials_module_name = __name__
 
     bpy.props.abs_plastic_materials = [
         'ABS Plastic Black',
@@ -78,11 +86,6 @@ def register():
         'ABS Plastic White',
         'ABS Plastic Yellow']
 
-    bpy.types.Scene.replaceExisting = BoolProperty(
-        name="Replace Existing",
-        description="Replace existing 'ABS Plastic *' materials when importing",
-        default=False)
-
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
 def unregister():
@@ -90,6 +93,7 @@ def unregister():
 
     del Scn.replaceExisting
     del Scn.isBrickMaterialsInstalled
+    del bpy.props.abs_plastic_materials_module_name
 
     bpy.utils.unregister_module(__name__)
 

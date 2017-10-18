@@ -62,7 +62,8 @@ class appendABSPlasticMaterials(bpy.types.Operator):
             # if material exists, remove or skip
             materialIdx = bpy.data.materials.find(m)
             if materialIdx >= 0:
-                if scn.replaceExisting:
+                replaceExisting = bpy.context.user_preferences.addons[bpy.props.abs_plastic_materials_module_name].preferences.replaceExisting
+                if replaceExisting:
                     # remove material
                     bpy.data.materials.remove(bpy.data.materials[materialIdx])
                 else:
