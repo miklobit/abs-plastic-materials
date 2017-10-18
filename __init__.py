@@ -98,8 +98,8 @@ def unregister():
     # addon updater unregister
     addon_updater_ops.unregister()
 
-    del Scn.replaceExisting
     del Scn.isBrickMaterialsInstalled
+    del bpy.props.abs_plastic_materials
     del bpy.props.abs_plastic_materials_module_name
 
     bpy.utils.unregister_module(__name__)
