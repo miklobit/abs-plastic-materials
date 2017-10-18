@@ -49,13 +49,13 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         # list of materials to append from 'abs_plastic_materials.blend'
         materials = bpy.props.abs_plastic_materials
         alreadyImported = []
-        toImport = []
 
         try:
+            # set cm.brickMaterialsAreDirty for all models in Rebrickr, if it's installed
             for cm in scn.cmlist:
                 if cm.materialType == "Random":
                     cm.brickMaterialsAreDirty = True
-        except:
+        except AttributeError:
             pass
 
         for m in materials:
@@ -69,19 +69,39 @@ class appendABSPlasticMaterials(bpy.types.Operator):
                     # skip material
                     alreadyImported.append(m)
                     continue
-            else:
-                toImport.append(m)
 
-            current_mode = scn.context.mode
+            # get the current mode
+            current_mode = str(bpy.context.mode)
+            # Rename current mode if one of these (for some reason Blender calls them two different things in object.mode_set and context.mode!)
+            if current_mode == 'EDIT_MESH': current_mode = 'EDIT'
+            if current_mode == 'PAINT_VERTEX': current_mode = 'VERTEX_PAINT'
+            if current_mode == 'PAINT_TEXTURE': current_mode = 'TEXTURE_PAINT'
+            if current_mode == 'PAINT_WEIGHT': current_mode = 'WEIGHT_PAINT'
+
+            # get the current length of bpy.data.materials
+            last_len_mats = len(bpy.data.materials)
+
             if current_mode != 'OBJECT':
                 # switch to object mode
                 bpy.ops.object.mode_set(mode='OBJECT')
-                # append material from directory
-                appendFrom(directory, filename=m)
+
+            # append material from directory
+            appendFrom(directory, filename=m)
+
+            if current_mode != 'OBJECT':
                 # switch back to last mode
                 bpy.ops.object.mode_set(mode=current_mode)
 
-        if len(alreadyImported) > 0:
+            # get compare last length of bpy.data.materials to current (if the same, material not imported)
+            if len(bpy.data.materials) == last_len_mats:
+                self.report({"WARNING"}, "'" + m + "' could not be imported. Try reinstalling the addon.")
+
+        # report status
+        if len(alreadyImported) == len(materials):
+            self.report({"INFO"}, "Materials already imported")
+        elif len(alreadyImported) > 0:
             self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
+        else:
+            self.report({"INFO"}, "Materials imported successfully!")
 
         return{"FINISHED"}
