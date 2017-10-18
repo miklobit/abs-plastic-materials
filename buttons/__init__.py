@@ -30,10 +30,10 @@ def appendFrom(directory, filename):
         filename=filename,
         directory=directory)
 
-class appendBrickMaterials(bpy.types.Operator):
-    """Append Brick Materials from external blender file"""                      # blender will use this as a tooltip for menu items and buttons.
-    bl_idname = "scene.append_brick_materials"                                   # unique identifier for buttons and menu items to reference.
-    bl_label = "Append Brick Materials"                                          # display name in the interface.
+class appendABSPlasticMaterials(bpy.types.Operator):
+    """Append ABS Plastic Materials from external blender file"""                      # blender will use this as a tooltip for menu items and buttons.
+    bl_idname = "scene.append_abs_plastic_materials"                                   # unique identifier for buttons and menu items to reference.
+    bl_label = "Append ABS Plastic Materials"                                          # display name in the interface.
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
@@ -42,12 +42,12 @@ class appendBrickMaterials(bpy.types.Operator):
         # define file paths
         # addonsPath = bpy.utils.user_resource('SCRIPTS', "addons")
         addonPath = os.path.dirname(os.path.abspath(__file__))[:-8]
-        blendfile = "%(addonPath)s/brick_materials.blend" % locals()
+        blendfile = "%(addonPath)s/abs_plastic_materials.blend" % locals()
         section   = "/Material/"
         directory  = blendfile + section
 
-        # list of materials to append from 'brick_materials.blend'
-        materials = bpy.props.brick_materials
+        # list of materials to append from 'abs_plastic_materials.blend'
+        materials = bpy.props.abs_plastic_materials
         alreadyImported = []
         toImport = []
 
@@ -72,18 +72,14 @@ class appendBrickMaterials(bpy.types.Operator):
             else:
                 toImport.append(m)
 
-            # append material from directory
-            newObj = None
-            if len(scn.objects) == 0:
-                m = bpy.data.meshes.new("junk")
-                newObj = bpy.data.objects.new("junk", m)
-            current_mode = scn.objects[0].mode
-            bpy.ops.object.mode_set(mode='OBJECT')
-            appendFrom(directory, filename=m)
-            bpy.ops.object.mode_set(mode=current_mode)
-            if newObj is not None:
-                bpy.data.objects.remove(newObj, True)
-                bpy.data.meshes.remove(m, True)
+            current_mode = scn.context.mode
+            if current_mode != 'OBJECT':
+                # switch to object mode
+                bpy.ops.object.mode_set(mode='OBJECT')
+                # append material from directory
+                appendFrom(directory, filename=m)
+                # switch back to last mode
+                bpy.ops.object.mode_set(mode=current_mode)
 
         if len(alreadyImported) > 0:
             self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))

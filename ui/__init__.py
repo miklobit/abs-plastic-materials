@@ -22,14 +22,14 @@ Created by Christopher Gearhart
 # system imports
 import bpy
 from bpy.props import *
-class BrickMaterialsPanel(bpy.types.Panel):
+class ABSPlasticMaterialsPanel(bpy.types.Panel):
     bl_space_type  = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context     = "material"
-    bl_label       = "Brick Materials"
-    bl_idname      = "PROPERTIES_Brick_Materials_append_materials"
-    # bl_category    = "Brick Materials"
-    COMPAT_ENGINES = {"CYCLES"}
+    bl_label       = "ABS Plastic Materials"
+    bl_idname      = "PROPERTIES_ABS_Plastic_Materials_append_materials"
+    # bl_category    = "ABS Plastic Materials"
+    # COMPAT_ENGINES = {"CYCLES"}
 
     # @classmethod
     # def poll(cls, context):
@@ -43,7 +43,7 @@ class BrickMaterialsPanel(bpy.types.Panel):
         col = layout.column(align=True)
         row = col.row(align=True)
         if bpy.context.scene.render.engine == 'CYCLES':
-            row.operator("scene.append_brick_materials", text="Import Brick Materials", icon="IMPORT")
+            row.operator("scene.append_abs_plastic_materials", text="Import ABS Plastic Materials", icon="IMPORT")
             # row = col.row(align=True)
             # row.prop(scn, "replaceExisting")
         else:
