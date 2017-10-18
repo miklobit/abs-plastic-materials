@@ -1,7 +1,7 @@
 bl_info = {
     "name"        : "LEGO Materials",
     "author"      : "Christopher Gearhart <chris@bblanimation.com>",
-    "version"     : (0, 1, 0),
+    "version"     : (1, 0, 0),
     "blender"     : (2, 78, 0),
     "description" : "Append LEGO Materials to current blender file with a simple click",
     "location"    : "PROPERTIES > Materials > LEGO Materials",
