@@ -88,8 +88,15 @@ def register():
 
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
+    # addon updater code and configurations
+    addon_updater_ops.register(bl_info)
+
+
 def unregister():
     Scn = bpy.types.Scene
+
+    # addon updater unregister
+    addon_updater_ops.unregister()
 
     del Scn.replaceExisting
     del Scn.isBrickMaterialsInstalled

@@ -825,7 +825,7 @@ def register(bl_info):
 
 	updater.user = "bblanimation"
 	updater.repo = "abs_plastic_materials"
-	updater.addon =  "ABS Plastic Materials" # optional, default gets from __package__ name
+	# updater.addon =  "abs_plastic_materials" # optional, default gets from __package__ name
 	updater.website = "https://www.blendermarket.com/products/abs_plastic_materials" # optional
 	updater.use_releases = False # ie use tags instead of releases, default True
 	updater.current_version = bl_info["version"]
