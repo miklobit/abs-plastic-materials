@@ -58,6 +58,18 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         except AttributeError:
             pass
 
+        # get the current mode
+        current_mode = str(bpy.context.mode)
+        # Rename current mode if one of these (for some reason Blender calls them two different things in object.mode_set and context.mode!)
+        if current_mode == 'EDIT_MESH': current_mode = 'EDIT'
+        if current_mode == 'PAINT_VERTEX': current_mode = 'VERTEX_PAINT'
+        if current_mode == 'PAINT_TEXTURE': current_mode = 'TEXTURE_PAINT'
+        if current_mode == 'PAINT_WEIGHT': current_mode = 'WEIGHT_PAINT'
+
+        # temporarily switch to object mode
+        if current_mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
+
         for m in materials:
             # if material exists, remove or skip
             materialIdx = bpy.data.materials.find(m)
@@ -71,31 +83,24 @@ class appendABSPlasticMaterials(bpy.types.Operator):
                     alreadyImported.append(m)
                     continue
 
-            # get the current mode
-            current_mode = str(bpy.context.mode)
-            # Rename current mode if one of these (for some reason Blender calls them two different things in object.mode_set and context.mode!)
-            if current_mode == 'EDIT_MESH': current_mode = 'EDIT'
-            if current_mode == 'PAINT_VERTEX': current_mode = 'VERTEX_PAINT'
-            if current_mode == 'PAINT_TEXTURE': current_mode = 'TEXTURE_PAINT'
-            if current_mode == 'PAINT_WEIGHT': current_mode = 'WEIGHT_PAINT'
-
             # get the current length of bpy.data.materials
             last_len_mats = len(bpy.data.materials)
-
-            if current_mode != 'OBJECT':
-                # switch to object mode
-                bpy.ops.object.mode_set(mode='OBJECT')
 
             # append material from directory
             appendFrom(directory, filename=m)
 
-            if current_mode != 'OBJECT':
-                # switch back to last mode
-                bpy.ops.object.mode_set(mode=current_mode)
-
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
                 self.report({"WARNING"}, "'" + m + "' could not be imported. Try reinstalling the addon.")
+                continue
+
+            # # ensure material saves to blender file
+            # new_mat = bpy.data.materials.get(m)
+            # new_mat.use_fake_user = True
+
+        # switch back to last mode
+        if current_mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode=current_mode)
 
         # report status
         if len(alreadyImported) == len(materials):
