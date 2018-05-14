@@ -31,10 +31,7 @@ class ABSPlasticMaterialsPreferences(AddonPreferences):
     bl_idname = __package__[:__package__.index(".lib")]
 
     # addon preferences
-    replaceExisting = BoolProperty(
-        name="Replace Existing",
-        description="Replace existing 'ABS Plastic *' materials when importing",
-        default=False)
+    # NONE!
 
 	# updater preferences
     auto_check_update = bpy.props.BoolProperty(
@@ -64,7 +61,7 @@ class ABSPlasticMaterialsPreferences(AddonPreferences):
         layout = self.layout
         col = layout.column(align=True)
         row = col.row(align=True)
-        row.prop(self, "replaceExisting")
+        # row.prop(self, "replaceExisting")
 
         # updater draw function
         addon_updater_ops.update_settings_ui(self,context)

@@ -40,6 +40,7 @@ props = bpy.props
 from .ui import *
 from .buttons import *
 from .lib import *
+from .functions import *
 
 # updater import
 from . import addon_updater_ops
@@ -86,6 +87,18 @@ def register():
         'ABS Plastic White',
         'ABS Plastic Yellow']
 
+    bpy.types.Scene.replaceExisting = BoolProperty(
+        name="Replace Existing",
+        description="Replace existing 'ABS Plastic *' materials when importing",
+        default=False)
+
+    bpy.types.Scene.subsurfAmount = FloatProperty(
+        name="Subsurface Scattering",
+        description="Amount of subsurface scattering for ABS Plastic Materials (higher values up to 1 are more accurate, but increase render times)",
+        min=0, max=4,
+        update=updateSubsurfAmount,
+        default=1)
+
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
     # addon updater code and configurations
@@ -99,6 +112,8 @@ def unregister():
     addon_updater_ops.unregister()
 
     del Scn.isBrickMaterialsInstalled
+    del Scn.subsurfAmount
+    del Scn.replaceExisting
     del bpy.props.abs_plastic_materials
     del bpy.props.abs_plastic_materials_module_name
 

@@ -53,3 +53,9 @@ class ABSPlasticMaterialsPanel(bpy.types.Panel):
             row.operator("scene.append_abs_plastic_materials", text="Import ABS Plastic Materials", icon="IMPORT")
         else:
             row.label("Switch to 'Cycles Render' engine")
+
+        col = layout.column(align=True)
+        row = col.row(align=True)
+        row.prop(scn, "subsurfAmount")
+        row = col.row(align=True)
+        row.prop(scn, "replaceExisting")

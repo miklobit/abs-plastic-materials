@@ -23,6 +23,8 @@
 import bpy
 import os
 
+from ..functions import *
+
 def appendFrom(directory, filename):
     filepath = directory + filename
     bpy.ops.wm.append(
@@ -70,37 +72,50 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         if current_mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
 
-        for m in materials:
+        matsToReplace = []
+
+        for mat_name in materials:
             # if material exists, remove or skip
-            materialIdx = bpy.data.materials.find(m)
-            if materialIdx >= 0:
-                replaceExisting = bpy.context.user_preferences.addons[bpy.props.abs_plastic_materials_module_name].preferences.replaceExisting
-                if replaceExisting:
+            m = bpy.data.materials.get(mat_name)
+            if m is not None:
+                if scn.replaceExisting:
                     # remove material
-                    bpy.data.materials.remove(bpy.data.materials[materialIdx])
+                    m = bpy.data.materials.get(mat_name)
+                    m.name = m.name + "__replaced"
+                    matsToReplace.append(m)
                 else:
                     # skip material
-                    alreadyImported.append(m)
+                    alreadyImported.append(mat_name)
                     continue
 
             # get the current length of bpy.data.materials
             last_len_mats = len(bpy.data.materials)
 
             # append material from directory
-            appendFrom(directory, filename=m)
+            appendFrom(directory, filename=mat_name)
 
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
-                self.report({"WARNING"}, "'" + m + "' could not be imported. Try reinstalling the addon.")
+                self.report({"WARNING"}, "'%(mat_name)s' could not be imported. Try reinstalling the addon." % locals())
                 continue
 
             # # ensure material saves to blender file
             # new_mat = bpy.data.materials.get(m)
             # new_mat.use_fake_user = True
 
+        # replace old material node trees
+        for old_mat in matsToReplace:
+            origName = old_mat.name.split("__")[0]
+            new_mat = bpy.data.materials.get(origName)
+            old_mat.user_remap(new_mat)
+            bpy.data.materials.remove(old_mat)
+
         # switch back to last mode
         if current_mode != 'OBJECT':
             bpy.ops.object.mode_set(mode=current_mode)
+
+        # update subsurf amount
+        updateSubsurfAmount(self, bpy.context)
 
         # report status
         if len(alreadyImported) == len(materials):
