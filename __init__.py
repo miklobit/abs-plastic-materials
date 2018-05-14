@@ -90,7 +90,7 @@ def register():
     bpy.types.Scene.replaceExisting = BoolProperty(
         name="Replace Existing",
         description="Replace existing 'ABS Plastic *' materials when importing",
-        default=False)
+        default=True)
 
     bpy.types.Scene.subsurfAmount = FloatProperty(
         name="Subsurface Scattering",

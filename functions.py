@@ -33,9 +33,8 @@ def updateSubsurfAmount(self, context):
         if mat is None:
             continue
         nodes = mat.node_tree.nodes
-        ds_node = nodes.get("Diffuse_Subsurf")
-        if ds_node is None:
+        pbr_node = nodes.get("PBR Dialectric")
+        if pbr_node is None:
             continue
-        print(mat_name)
-        mix_amount = float(ds_node.label)
-        ds_node.inputs[0].default_value = 1 - (1 - mix_amount) * scn.subsurfAmount
+        mix_amount = pbr_node.inputs["SSS Default"].default_value
+        pbr_node.inputs["SSS Amount"].default_value = mix_amount * scn.subsurfAmount
