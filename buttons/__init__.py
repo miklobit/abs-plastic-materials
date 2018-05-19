@@ -24,6 +24,7 @@ import bpy
 import os
 
 from ..functions import *
+from ..colors import *
 
 def appendFrom(directory, filename):
     filepath = directory + filename
@@ -32,11 +33,16 @@ def appendFrom(directory, filename):
         filename=filename,
         directory=directory)
 
+
 class appendABSPlasticMaterials(bpy.types.Operator):
     """Append ABS Plastic Materials from external blender file"""                      # blender will use this as a tooltip for menu items and buttons.
     bl_idname = "scene.append_abs_plastic_materials"                                   # unique identifier for buttons and menu items to reference.
     bl_label = "Append ABS Plastic Materials"                                          # display name in the interface.
     bl_options = {"REGISTER", "UNDO"}
+
+    @classmethod
+    def poll(self, context):
+        return context.scene.render.engine == 'CYCLES'
 
     def execute(self, context):
         scn = context.scene
@@ -51,6 +57,11 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         # list of materials to append from 'abs_plastic_materials.blend'
         materials = bpy.props.abs_plastic_materials
         alreadyImported = []
+        matsToReplace = []
+        failed = []
+
+        imagesToReplace = ["ABS Bump Map", "ABS Specular Map"]
+        nodeGroupsToReplace = ["Dialectric", "Transparent", "Bump", "Random Value", "Fresnel", "Glass Absorption", "Randomize Color", "Reflection"]
 
         try:
             # set cm.brickMaterialsAreDirty for all models in Rebrickr, if it's installed
@@ -59,6 +70,15 @@ class appendABSPlasticMaterials(bpy.types.Operator):
                     cm.brickMaterialsAreDirty = True
         except AttributeError:
             pass
+
+        # remove existing bump/specular maps
+        for im in bpy.data.images:
+            if im.name in imagesToReplace:
+                bpy.data.images.remove(im)
+        # remove old existing node groups
+        for ng in bpy.data.node_groups:
+            if ng.name.startswith("ABS_") and ng.name[4:] in nodeGroupsToReplace:
+                bpy.data.node_groups.remove(ng)
 
         # get the current mode
         current_mode = str(bpy.context.mode)
@@ -72,21 +92,14 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         if current_mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
 
-        matsToReplace = []
-
         for mat_name in materials:
             # if material exists, remove or skip
             m = bpy.data.materials.get(mat_name)
             if m is not None:
-                if scn.replaceExisting:
-                    # remove material
-                    m = bpy.data.materials.get(mat_name)
-                    m.name = m.name + "__replaced"
-                    matsToReplace.append(m)
-                else:
-                    # skip material
-                    alreadyImported.append(mat_name)
-                    continue
+                # mark material to replace
+                m = bpy.data.materials.get(mat_name)
+                m.name = m.name + "__replaced"
+                matsToReplace.append(m)
 
             # get the current length of bpy.data.materials
             last_len_mats = len(bpy.data.materials)
@@ -97,6 +110,9 @@ class appendABSPlasticMaterials(bpy.types.Operator):
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
                 self.report({"WARNING"}, "'%(mat_name)s' could not be imported. Try reinstalling the addon." % locals())
+                if m in matsToReplace:
+                    matsToReplace.remove(m)
+                failed.append(mat_name)
                 continue
 
             # # ensure material saves to blender file
@@ -114,14 +130,53 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         if current_mode != 'OBJECT':
             bpy.ops.object.mode_set(mode=current_mode)
 
-        # update subsurf amount
-        updateSubsurfAmount(self, bpy.context)
+        # update subsurf/reflection amounts
+        update_abs_subsurf(self, bpy.context)
+        updateabs_solidReflect(self, bpy.context)
+        update_abs_transReflect(self, bpy.context)
+
+        # remap bump/specular to one im
+        for mapName in imagesToReplace:
+            firstIm = None
+            for im in bpy.data.images:
+                if im is None:
+                    continue
+                if im.name.startswith(mapName):
+                    if im.users == 0:
+                        bpy.data.images.remove(im)
+                    elif firstIm is None:
+                        firstIm = im
+                    else:
+                        im.user_remap(firstIm)
+                        bpy.data.images.remove(im)
+            if firstIm is not None:
+                firstIm.name = mapName
+
+        # remap node groups to one group
+        for groupName in nodeGroupsToReplace:
+            groupName = "ABS_" + groupName
+            firstGroup = None
+            for g in bpy.data.node_groups:
+                if g is None:
+                    continue
+                if g.name.startswith(groupName):
+                    if g.users == 0:
+                        bpy.data.node_groups.remove(g)
+                    elif firstGroup is None:
+                        firstGroup = g
+                    else:
+                        g.user_remap(firstGroup)
+                        bpy.data.node_groups.remove(g)
+            if firstGroup is not None:
+                firstGroup.name = groupName
 
         # report status
         if len(alreadyImported) == len(materials):
             self.report({"INFO"}, "Materials already imported")
         elif len(alreadyImported) > 0:
             self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
+        elif len(failed) > 0:
+            self.report({"INFO"}, "The following Materials failed to import (try reinstalling the addon): " + str(failed)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
         else:
             self.report({"INFO"}, "Materials imported successfully!")
 

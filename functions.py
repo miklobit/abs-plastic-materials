@@ -26,15 +26,71 @@ from bpy.props import *
 # Addon imports
 # NONE!
 
-def updateSubsurfAmount(self, context):
+def update_abs_subsurf(self, context):
     scn = context.scene
     for mat_name in bpy.props.abs_plastic_materials:
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
         nodes = mat.node_tree.nodes
-        pbr_node = nodes.get("PBR Dialectric")
-        if pbr_node is None:
+        target_node = nodes.get("ABS Dialectric")
+        if target_node is None:
             continue
-        mix_amount = pbr_node.inputs["SSS Default"].default_value
-        pbr_node.inputs["SSS Amount"].default_value = mix_amount * scn.subsurfAmount
+        input1 = target_node.inputs.get("SSS Default")
+        input2 = target_node.inputs.get("SSS Amount")
+        if input1 is None or input2 is None:
+            continue
+        default_amount = input1.default_value
+        input2.default_value = default_amount * scn.abs_subsurf
+
+
+def updateabs_solidReflect(self, context):
+    scn = context.scene
+    for mat_name in bpy.props.abs_plastic_materials:
+        mat = bpy.data.materials.get(mat_name)
+        if mat is None:
+            continue
+        nodes = mat.node_tree.nodes
+        target_node = nodes.get("ABS Dialectric")
+        if target_node is None:
+            continue
+        input1 = target_node.inputs.get("Ref Default")
+        input2 = target_node.inputs.get("Reflection")
+        if input1 is None or input2 is None:
+            continue
+        default_amount = input1.default_value
+        input2.default_value = default_amount * scn.abs_solidReflect
+
+
+def update_abs_transReflect(self, context):
+    scn = context.scene
+    for mat_name in bpy.props.abs_plastic_materials:
+        mat = bpy.data.materials.get(mat_name)
+        if mat is None:
+            continue
+        nodes = mat.node_tree.nodes
+        target_node = nodes.get("ABS Transparent")
+        if target_node is None:
+            continue
+        input1 = target_node.inputs.get("Reflection")
+        if input1 is None:
+            continue
+        input1.default_value = scn.abs_transReflect
+
+
+def update_abs_displace(self, context):
+    scn = context.scene
+    for mat_name in bpy.props.abs_plastic_materials:
+        mat = bpy.data.materials.get(mat_name)
+        if mat is None:
+            continue
+        nodes = mat.node_tree.nodes
+        target_node = nodes.get("ABS Bump")
+        if target_node is None:
+            continue
+        input1 = target_node.inputs.get("Default")
+        input2 = target_node.inputs.get("Amount")
+        if input1 is None or input2 is None:
+            continue
+        default_amount = input1.default_value
+        input2.default_value = default_amount + ((scn.abs_displace - 0.01) / 10)

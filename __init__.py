@@ -62,7 +62,7 @@ def register():
         'ABS Plastic Dark Grey',
         'ABS Plastic Dark Red',
         'ABS Plastic Dark Tan',
-        'ABS Plastic Gold',
+        'ABS Plastic Pearl Gold',
         'ABS Plastic Green',
         'ABS Plastic Light Grey',
         'ABS Plastic Lime',
@@ -87,17 +87,30 @@ def register():
         'ABS Plastic White',
         'ABS Plastic Yellow']
 
-    bpy.types.Scene.replaceExisting = BoolProperty(
-        name="Replace Existing",
-        description="Replace existing 'ABS Plastic *' materials when importing",
-        default=True)
-
-    bpy.types.Scene.subsurfAmount = FloatProperty(
+    bpy.types.Scene.abs_subsurf = FloatProperty(
         name="Subsurface Scattering",
         description="Amount of subsurface scattering for ABS Plastic Materials (higher values up to 1 are more accurate, but increase render times)",
         min=0, max=4,
-        update=updateSubsurfAmount,
+        update=update_abs_subsurf,
         default=1)
+    bpy.types.Scene.abs_solidReflect = FloatProperty(
+        name="Reflection (solid)",
+        description="Amount of reflection for solid ABS Plastic Materials",
+        min=0, max=10,
+        update=updateabs_solidReflect,
+        default=1)
+    bpy.types.Scene.abs_transReflect = FloatProperty(
+        name="Reflection (transparent)",
+        description="Amount of reflection for transparent ABS Plastic Materials",
+        min=0, max=1,
+        update=update_abs_transReflect,
+        default=1)
+    bpy.types.Scene.abs_displace = FloatProperty(
+        name="Displacement",
+        description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped)",
+        min=0, max=10,
+        update=update_abs_displace,
+        default=0.01)
 
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
@@ -112,8 +125,7 @@ def unregister():
     addon_updater_ops.unregister()
 
     del Scn.isBrickMaterialsInstalled
-    del Scn.subsurfAmount
-    del Scn.replaceExisting
+    del Scn.abs_subsurf
     del bpy.props.abs_plastic_materials
     del bpy.props.abs_plastic_materials_module_name
 

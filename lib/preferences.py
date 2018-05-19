@@ -61,7 +61,6 @@ class ABSPlasticMaterialsPreferences(AddonPreferences):
         layout = self.layout
         col = layout.column(align=True)
         row = col.row(align=True)
-        # row.prop(self, "replaceExisting")
 
         # updater draw function
         addon_updater_ops.update_settings_ui(self,context)
