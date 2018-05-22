@@ -132,8 +132,8 @@ class appendABSPlasticMaterials(bpy.types.Operator):
 
         # update subsurf/reflection amounts
         update_abs_subsurf(self, bpy.context)
-        updateabs_solidReflect(self, bpy.context)
-        update_abs_transReflect(self, bpy.context)
+        update_abs_reflect(self, bpy.context)
+        toggle_save_datablocks(self, bpy.context)
 
         # remap bump/specular to one im
         for mapName in imagesToReplace:

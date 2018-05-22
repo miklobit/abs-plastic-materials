@@ -93,17 +93,11 @@ def register():
         min=0, max=10,
         update=update_abs_subsurf,
         default=1)
-    bpy.types.Scene.abs_solidReflect = FloatProperty(
-        name="Reflection (solid)",
-        description="Amount of reflection for solid ABS Plastic Materials",
+    bpy.types.Scene.abs_reflect = FloatProperty(
+        name="Reflection",
+        description="Amount of reflection for ABS Plastic Materials",
         min=0, max=100,
-        update=updateabs_solidReflect,
-        default=1)
-    bpy.types.Scene.abs_transReflect = FloatProperty(
-        name="Reflection (transparent)",
-        description="Amount of reflection for transparent ABS Plastic Materials",
-        min=0, max=1,
-        update=update_abs_transReflect,
+        update=update_abs_reflect,
         default=1)
     bpy.types.Scene.abs_displace = FloatProperty(
         name="Displacement",
@@ -111,6 +105,11 @@ def register():
         min=0, max=100,
         update=update_abs_displace,
         default=0.01)
+    bpy.types.Scene.save_datablocks = BoolProperty(
+        name="Save Data-Blocks",
+        description="Save ABS Plastic Materials even if they have no users",
+        update=toggle_save_datablocks,
+        default=True)
 
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
