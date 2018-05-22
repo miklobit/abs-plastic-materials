@@ -90,13 +90,13 @@ def register():
     bpy.types.Scene.abs_subsurf = FloatProperty(
         name="Subsurface Scattering",
         description="Amount of subsurface scattering for ABS Plastic Materials (higher values up to 1 are more accurate, but increase render times)",
-        min=0, max=4,
+        min=0, max=10,
         update=update_abs_subsurf,
         default=1)
     bpy.types.Scene.abs_solidReflect = FloatProperty(
         name="Reflection (solid)",
         description="Amount of reflection for solid ABS Plastic Materials",
-        min=0, max=10,
+        min=0, max=100,
         update=updateabs_solidReflect,
         default=1)
     bpy.types.Scene.abs_transReflect = FloatProperty(
@@ -108,7 +108,7 @@ def register():
     bpy.types.Scene.abs_displace = FloatProperty(
         name="Displacement",
         description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped)",
-        min=0, max=10,
+        min=0, max=100,
         update=update_abs_displace,
         default=0.01)
 
