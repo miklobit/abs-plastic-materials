@@ -60,7 +60,7 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         matsToReplace = []
         failed = []
 
-        imagesToReplace = ["ABS Bump Map", "ABS Specular Map"]
+        imagesToReplace = ["ABS Fingerprints and Dust"]
         nodeGroupsToReplace = ["Dialectric", "Transparent", "Bump", "Random Value", "Fresnel", "Glass Absorption", "Randomize Color", "Reflection"]
 
         try:
@@ -133,6 +133,8 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         # update subsurf/reflection amounts
         update_abs_subsurf(self, bpy.context)
         update_abs_reflect(self, bpy.context)
+        update_abs_fingerprints(self, context)
+        update_abs_displace(self, bpy.context)
         toggle_save_datablocks(self, bpy.context)
 
         # remap bump/specular to one im

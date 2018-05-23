@@ -76,6 +76,7 @@ def update_abs_fingerprints(self, context):
         if input1 is None:
             continue
         input1.default_value = scn.abs_fingerprints
+        input1.default_value = scn.abs_fingerprints if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_fingerprints / 10
 
 
 def update_abs_displace(self, context):
