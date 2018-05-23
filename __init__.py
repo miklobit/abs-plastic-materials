@@ -62,7 +62,7 @@ def register():
         'ABS Plastic Dark Grey',
         'ABS Plastic Dark Red',
         'ABS Plastic Dark Tan',
-        'ABS Plastic Pearl Gold',
+        'ABS Plastic Gold',
         'ABS Plastic Green',
         'ABS Plastic Light Grey',
         'ABS Plastic Lime',
@@ -99,6 +99,12 @@ def register():
         min=0, max=100,
         update=update_abs_reflect,
         default=1)
+    bpy.types.Scene.abs_fingerprints = FloatProperty(
+        name="Fingerprints",
+        description="Amount of fingerprints and dust to add to the specular map of the ABS Plastic Materials (mesh must be unwrapped)",
+        min=0, max=1,
+        update=update_abs_fingerprints,
+        default=0.5)
     bpy.types.Scene.abs_displace = FloatProperty(
         name="Displacement",
         description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped)",

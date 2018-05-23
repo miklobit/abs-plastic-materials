@@ -61,6 +61,8 @@ class ABSPlasticMaterialsPanel(bpy.types.Panel):
         row = col.row(align=True)
         row.prop(scn, "abs_reflect")
         row = col.row(align=True)
+        row.prop(scn, "abs_fingerprints")
+        row = col.row(align=True)
         row.prop(scn, "abs_displace")
         row = col.row(align=True)
         row.prop(scn, "save_datablocks")

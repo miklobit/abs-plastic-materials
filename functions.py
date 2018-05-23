@@ -62,6 +62,22 @@ def update_abs_reflect(self, context):
         input2.default_value = default_amount * scn.abs_reflect
 
 
+def update_abs_fingerprints(self, context):
+    scn = context.scene
+    for mat_name in bpy.props.abs_plastic_materials:
+        mat = bpy.data.materials.get(mat_name)
+        if mat is None:
+            continue
+        nodes = mat.node_tree.nodes
+        target_node = nodes.get("ABS Dialectric") or nodes.get("ABS Transparent")
+        if target_node is None:
+            continue
+        input1 = target_node.inputs.get("Fingerprints")
+        if input1 is None:
+            continue
+        input1.default_value = scn.abs_fingerprints
+
+
 def update_abs_displace(self, context):
     scn = context.scene
     for mat_name in bpy.props.abs_plastic_materials:
@@ -69,15 +85,29 @@ def update_abs_displace(self, context):
         if mat is None:
             continue
         nodes = mat.node_tree.nodes
+        links = mat.node_tree.links
         target_node = nodes.get("ABS Bump")
         if target_node is None:
             continue
-        input1 = target_node.inputs.get("Default")
-        input2 = target_node.inputs.get("Amount")
+        input1 = target_node.inputs.get("Noise")
+        input2 = target_node.inputs.get("Waves")
         if input1 is None or input2 is None:
             continue
-        default_amount = input1.default_value
-        input2.default_value = default_amount + ((scn.abs_displace - 0.01) / 10)
+        input1.default_value = scn.abs_displace / 10 if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace / 10 + 0.2
+        input2.default_value = scn.abs_displace / 10
+        # disconnect displacement node if not used
+        color_out = target_node.outputs[0]
+        mo_node = nodes.get("Material Output")
+        if mo_node is None:
+            continue
+        displace = mo_node.inputs.get("Displacement")
+        if displace is None:
+            continue
+        if scn.abs_displace == 0:
+            for l in displace.links:
+                links.remove(l)
+        else:
+            links.new(target_node.outputs["Color"], displace)
 
 
 def toggle_save_datablocks(self, context):
