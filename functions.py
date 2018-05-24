@@ -76,7 +76,7 @@ def update_abs_fingerprints(self, context):
         if input1 is None:
             continue
         input1.default_value = scn.abs_fingerprints
-        input1.default_value = scn.abs_fingerprints if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_fingerprints / 10
+        input1.default_value = scn.abs_fingerprints if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_fingerprints / 8
 
 
 def update_abs_displace(self, context):
@@ -94,7 +94,7 @@ def update_abs_displace(self, context):
         input2 = target_node.inputs.get("Waves")
         if input1 is None or input2 is None:
             continue
-        input1.default_value = scn.abs_displace / 10 if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace / 10 + 0.2
+        input1.default_value = scn.abs_displace / 10 if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace / 10 + 0.15
         input2.default_value = scn.abs_displace / 10
         # disconnect displacement node if not used
         color_out = target_node.outputs[0]
