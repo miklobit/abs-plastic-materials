@@ -54,12 +54,10 @@ def update_abs_reflect(self, context):
         target_node = nodes.get("ABS Dialectric") or nodes.get("ABS Transparent")
         if target_node is None:
             continue
-        input1 = target_node.inputs.get("Ref Default")
-        input2 = target_node.inputs.get("Reflection")
-        if input1 is None or input2 is None:
+        input1 = target_node.inputs.get("Reflection")
+        if input1 is None:
             continue
-        default_amount = input1.default_value
-        input2.default_value = default_amount * scn.abs_reflect
+        input1.default_value = scn.abs_reflect * (0.4 if mat.name in ["ABS Plastic Silver", "ABS Plastic Gold"] else 0.01)
 
 
 def update_abs_fingerprints(self, context):
@@ -69,14 +67,17 @@ def update_abs_fingerprints(self, context):
         if mat is None:
             continue
         nodes = mat.node_tree.nodes
-        target_node = nodes.get("ABS Dialectric") or nodes.get("ABS Transparent")
-        if target_node is None:
+        target_node1 = nodes.get("ABS Dialectric") or nodes.get("ABS Transparent")
+        target_node2 = nodes.get("ABS Bump")
+        if target_node1 is None or target_node2 is None:
             continue
-        input1 = target_node.inputs.get("Fingerprints")
-        if input1 is None:
+        input1 = target_node1.inputs.get("Fingerprints")
+        input2 = target_node2.inputs.get("Fingerprints")
+        if input1 is None or input2 is None:
             continue
-        input1.default_value = scn.abs_fingerprints
         input1.default_value = scn.abs_fingerprints if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_fingerprints / 8
+        input2.default_value = scn.abs_fingerprints * scn.displace
+
 
 
 def update_abs_displace(self, context):
@@ -94,8 +95,8 @@ def update_abs_displace(self, context):
         input2 = target_node.inputs.get("Waves")
         if input1 is None or input2 is None:
             continue
-        input1.default_value = scn.abs_displace / 10 if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace / 10 + 0.15
-        input2.default_value = scn.abs_displace / 10
+        input1.default_value = scn.abs_displace if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace + 0.2
+        input2.default_value = scn.abs_displace
         # disconnect displacement node if not used
         color_out = target_node.outputs[0]
         mo_node = nodes.get("Material Output")

@@ -104,13 +104,13 @@ def register():
         description="Amount of fingerprints and dust to add to the specular map of the ABS Plastic Materials (mesh must be unwrapped)",
         min=0, max=1,
         update=update_abs_fingerprints,
-        default=0.5)
+        default=0.3)
     bpy.types.Scene.abs_displace = FloatProperty(
         name="Displacement",
         description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped)",
         min=0, max=100,
         update=update_abs_displace,
-        default=0.01)
+        default=0.001)
     bpy.types.Scene.save_datablocks = BoolProperty(
         name="Save Data-Blocks",
         description="Save ABS Plastic Materials even if they have no users",

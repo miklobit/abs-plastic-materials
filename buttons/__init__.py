@@ -61,7 +61,7 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         failed = []
 
         imagesToReplace = ["ABS Fingerprints and Dust"]
-        nodeGroupsToReplace = ["Dialectric", "Transparent", "Bump", "Random Value", "Fresnel", "Glass Absorption", "Randomize Color", "Reflection"]
+        nodeGroupsToReplace = ["Dialectric", "Transparent", "Bump", "Uniform Scale"]
 
         try:
             # set cm.brickMaterialsAreDirty for all models in Rebrickr, if it's installed
