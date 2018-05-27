@@ -57,7 +57,7 @@ def update_abs_reflect(self, context):
         input1 = target_node.inputs.get("Reflection")
         if input1 is None:
             continue
-        input1.default_value = scn.abs_reflect * (0.4 if mat.name in ["ABS Plastic Silver", "ABS Plastic Gold"] else 0.01)
+        input1.default_value = scn.abs_reflect * (0.4 if mat.name in ["ABS Plastic Silver", "ABS Plastic Gold"] else 0.005)
 
 
 def update_abs_fingerprints(self, context):
@@ -76,7 +76,7 @@ def update_abs_fingerprints(self, context):
         if input1 is None or input2 is None:
             continue
         input1.default_value = scn.abs_fingerprints if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_fingerprints / 8
-        input2.default_value = scn.abs_fingerprints * scn.displace
+        input2.default_value = scn.abs_fingerprints * scn.abs_displace
 
 
 
@@ -91,12 +91,16 @@ def update_abs_displace(self, context):
         target_node = nodes.get("ABS Bump")
         if target_node is None:
             continue
-        input1 = target_node.inputs.get("Noise")
-        input2 = target_node.inputs.get("Waves")
-        if input1 is None or input2 is None:
+        noise = target_node.inputs.get("Noise")
+        waves = target_node.inputs.get("Waves")
+        scratches = target_node.inputs.get("Scratches")
+        fingerprints = target_node.inputs.get("Fingerprints")
+        if noise is None or waves is None or scratches is None or fingerprints is None:
             continue
-        input1.default_value = scn.abs_displace if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace + 0.2
-        input2.default_value = scn.abs_displace
+        noise.default_value = scn.abs_displace if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace + 0.2
+        waves.default_value = scn.abs_displace
+        scratches.default_value = scn.abs_displace
+        fingerprints.default_value = scn.abs_fingerprints * scn.abs_displace
         # disconnect displacement node if not used
         color_out = target_node.outputs[0]
         mo_node = nodes.get("Material Output")
