@@ -110,13 +110,20 @@ def register():
         description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped)",
         min=0, max=100,
         update=update_abs_displace,
-        default=0.001)
+        default=0)
+    # bpy.types.Scene.abs_uv_scale = FloatProperty(
+    #     name="UV Scale",
+    #     description="Update the universal scale of the ",
+    #     min=0,
+    #     update=update_abs_uv_scale,
+    #     default=1)
     bpy.types.Scene.save_datablocks = BoolProperty(
         name="Save Data-Blocks",
         description="Save ABS Plastic Materials even if they have no users",
         update=toggle_save_datablocks,
         default=True)
 
+    # Add attribute for Bricker addon
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
     # addon updater code and configurations
