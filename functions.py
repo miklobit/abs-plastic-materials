@@ -60,6 +60,22 @@ def update_abs_reflect(self, context):
         input1.default_value = scn.abs_reflect * (0.4 if mat.name in ["ABS Plastic Silver", "ABS Plastic Gold"] else 0.005)
 
 
+def update_abs_randomize(self, context):
+    scn = context.scene
+    for mat_name in bpy.props.abs_plastic_materials:
+        mat = bpy.data.materials.get(mat_name)
+        if mat is None:
+            continue
+        nodes = mat.node_tree.nodes
+        target_node = nodes.get("ABS Dialectric") or nodes.get("ABS Transparent")
+        if target_node is None:
+            continue
+        input1 = target_node.inputs.get("Random")
+        if input1 is None:
+            continue
+        input1.default_value = scn.abs_randomize
+
+
 def update_abs_fingerprints(self, context):
     scn = context.scene
     for mat_name in bpy.props.abs_plastic_materials:
@@ -97,7 +113,7 @@ def update_abs_displace(self, context):
         fingerprints = target_node.inputs.get("Fingerprints")
         if noise is None or waves is None or scratches is None or fingerprints is None:
             continue
-        noise.default_value = scn.abs_displace if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace + 0.2
+        noise.default_value = scn.abs_displace if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace * 20
         waves.default_value = scn.abs_displace
         scratches.default_value = scn.abs_displace
         fingerprints.default_value = scn.abs_fingerprints * scn.abs_displace

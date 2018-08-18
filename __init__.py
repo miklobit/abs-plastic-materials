@@ -7,7 +7,7 @@ bl_info = {
     "location"    : "PROPERTIES > Materials > ABS Plastic Materials",
     "warning"     : "",  # used for warning icon and text in addons panel
     "wiki_url"    : "https://www.blendermarket.com/products/abs-plastic-materials",
-    "tracker_url" : "https://github.com/bblanimation/abs_plastic_materials/issues",
+    "tracker_url" : "https://github.com/bblanimation/abs-plastic-materials/issues",
     "category"    : "Materials"}
 
 """
@@ -99,6 +99,12 @@ def register():
         min=0, max=100,
         update=update_abs_reflect,
         default=1)
+    bpy.types.Scene.abs_randomize = FloatProperty(
+        name="Randomize",
+        description="Amount of per-object randomness for ABS Plastic Material colors",
+        min=0, max=1,
+        update=update_abs_randomize,
+        default=0.02)
     bpy.types.Scene.abs_fingerprints = FloatProperty(
         name="Fingerprints",
         description="Amount of fingerprints and dust to add to the specular map of the ABS Plastic Materials (mesh must be unwrapped)",
