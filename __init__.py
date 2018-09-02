@@ -50,30 +50,32 @@ def register():
 
     bpy.props.abs_plastic_materials_module_name = __name__
 
-    bpy.props.abs_plastic_materials = [
+    bpy.props.abs_mats_common = [
         'ABS Plastic Black',
         'ABS Plastic Blue',
-        'ABS Plastic Bright Green',
-        'ABS Plastic Bright Light Orange',
         'ABS Plastic Brown',
         'ABS Plastic Dark Azur',
+        'ABS Plastic Dark Blue',
         'ABS Plastic Dark Brown',
         'ABS Plastic Dark Green',
         'ABS Plastic Dark Grey',
         'ABS Plastic Dark Red',
         'ABS Plastic Dark Tan',
-        'ABS Plastic Gold',
         'ABS Plastic Green',
         'ABS Plastic Light Grey',
         'ABS Plastic Lime',
         'ABS Plastic Orange',
-        'ABS Plastic Pink',
+        'ABS Plastic Bright Pink',
         'ABS Plastic Purple',
         'ABS Plastic Red',
         'ABS Plastic Sand Blue',
         'ABS Plastic Sand Green',
         'ABS Plastic Silver',
         'ABS Plastic Tan',
+        'ABS Plastic White',
+        'ABS Plastic Yellow']
+
+    bpy.props.abs_mats_transparent = [
         'ABS Plastic Trans-Clear',
         'ABS Plastic Trans-Yellowish Clear',
         'ABS Plastic Trans-Light Blue',
@@ -83,9 +85,24 @@ def register():
         'ABS Plastic Trans-Orange',
         'ABS Plastic Trans-Reddish Orange',
         'ABS Plastic Trans-Red',
-        'ABS Plastic Trans-Yellow',
-        'ABS Plastic White',
-        'ABS Plastic Yellow']
+        'ABS Plastic Trans-Yellow']
+
+    bpy.props.abs_mats_uncommon = [
+        'ABS Plastic Bright Green',
+        'ABS Plastic Bright Light Orange',
+        'ABS Plastic Bright Pink',
+        'ABS Plastic Cool Yellow',
+        'ABS Plastic Dark Purple',
+        'ABS Plastic Flesh',
+        'ABS Plastic Gold',
+        'ABS Plastic Lavender',
+        'ABS Plastic Light Blue',
+        'ABS Plastic Light Flesh',
+        'ABS Plastic Light Pink',
+        'ABS Plastic Magenta',
+        'ABS Plastic Medium Lavender',
+        'ABS Plastic Purple',
+        'ABS Plastic Teal']
 
     bpy.types.Scene.abs_subsurf = FloatProperty(
         name="Subsurface Scattering",
@@ -128,6 +145,14 @@ def register():
         description="Save ABS Plastic Materials even if they have no users",
         update=toggle_save_datablocks,
         default=True)
+    bpy.types.Scene.import_transparent = BoolProperty(
+        name="Include Transparent Colors",
+        description="Import transparent colors",
+        default=False)
+    bpy.types.Scene.import_uncommon = BoolProperty(
+        name="Include Uncommon Colors",
+        description="Save ABS Plastic Materials even if they have no users",
+        default=False)
 
     # Add attribute for Bricker addon
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
@@ -144,7 +169,9 @@ def unregister():
 
     del Scn.isBrickMaterialsInstalled
     del Scn.abs_subsurf
-    del bpy.props.abs_plastic_materials
+    del bpy.props.abs_mats_uncommon
+    del bpy.props.abs_mats_transparent
+    del bpy.props.abs_mats_common
     del bpy.props.abs_plastic_materials_module_name
 
     bpy.utils.unregister_module(__name__)

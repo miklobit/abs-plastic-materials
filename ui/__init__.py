@@ -24,6 +24,7 @@ import bpy
 from bpy.props import *
 
 # updater import
+from .app_handlers import *
 from .. import addon_updater_ops
 
 class ABSPlasticMaterialsPanel(bpy.types.Panel):
@@ -57,7 +58,14 @@ class ABSPlasticMaterialsPanel(bpy.types.Panel):
             row.operator("scene.append_abs_plastic_materials", text="Import ABS Plastic Materials", icon="IMPORT")
         else:
             row.label("Switch to 'Cycles Render' engine")
+        # import settings
+        col = layout.column(align=True)
+        row = col.row(align=True)
+        row.prop(scn, "import_transparent")
+        row = col.row(align=True)
+        row.prop(scn, "import_uncommon")
 
+        # material settings
         col = layout.column(align=True)
         col.label("Properties:")
         row = col.row(align=True)

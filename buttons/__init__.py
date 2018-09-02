@@ -55,7 +55,7 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         directory  = blendfile + section
 
         # list of materials to append from 'abs_plastic_materials.blend'
-        materials = bpy.props.abs_plastic_materials
+        mat_names = getMatNames()
         alreadyImported = []
         matsToReplace = []
         failed = []
@@ -92,7 +92,7 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         if current_mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
 
-        for mat_name in materials:
+        for mat_name in mat_names:
             # if material exists, remove or skip
             m = bpy.data.materials.get(mat_name)
             if m is not None:
@@ -174,7 +174,7 @@ class appendABSPlasticMaterials(bpy.types.Operator):
                 firstGroup.name = groupName
 
         # report status
-        if len(alreadyImported) == len(materials):
+        if len(alreadyImported) == len(mat_names):
             self.report({"INFO"}, "Materials already imported")
         elif len(alreadyImported) > 0:
             self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))

@@ -26,9 +26,19 @@ from bpy.props import *
 # Addon imports
 # NONE!
 
+def getMatNames():
+    scn = bpy.context.scene
+    materials = bpy.props.abs_mats_common
+    if scn.import_transparent:
+        materials += bpy.props.abs_mats_transparent
+    if scn.import_uncommon:
+        materials += bpy.props.abs_mats_uncommon
+    return materials
+    
+
 def update_abs_subsurf(self, context):
     scn = context.scene
-    for mat_name in bpy.props.abs_plastic_materials:
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -46,7 +56,7 @@ def update_abs_subsurf(self, context):
 
 def update_abs_reflect(self, context):
     scn = context.scene
-    for mat_name in bpy.props.abs_plastic_materials:
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -62,7 +72,7 @@ def update_abs_reflect(self, context):
 
 def update_abs_randomize(self, context):
     scn = context.scene
-    for mat_name in bpy.props.abs_plastic_materials:
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -78,7 +88,7 @@ def update_abs_randomize(self, context):
 
 def update_abs_fingerprints(self, context):
     scn = context.scene
-    for mat_name in bpy.props.abs_plastic_materials:
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -98,7 +108,7 @@ def update_abs_fingerprints(self, context):
 
 def update_abs_displace(self, context):
     scn = context.scene
-    for mat_name in bpy.props.abs_plastic_materials:
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -134,7 +144,7 @@ def update_abs_displace(self, context):
 
 def toggle_save_datablocks(self, context):
     scn = context.scene
-    for mat_name in bpy.props.abs_plastic_materials:
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is not None:
             mat.use_fake_user = scn.save_datablocks
