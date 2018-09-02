@@ -61,9 +61,9 @@ class ABSPlasticMaterialsPanel(bpy.types.Panel):
         # import settings
         col = layout.column(align=True)
         row = col.row(align=True)
-        row.prop(scn, "import_transparent")
+        row.prop(scn, "include_transparent")
         row = col.row(align=True)
-        row.prop(scn, "import_uncommon")
+        row.prop(scn, "include_uncommon")
 
         # material settings
         col = layout.column(align=True)

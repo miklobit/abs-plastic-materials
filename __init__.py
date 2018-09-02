@@ -65,7 +65,6 @@ def register():
         'ABS Plastic Light Grey',
         'ABS Plastic Lime',
         'ABS Plastic Orange',
-        'ABS Plastic Bright Pink',
         'ABS Plastic Purple',
         'ABS Plastic Red',
         'ABS Plastic Sand Blue',
@@ -76,16 +75,16 @@ def register():
         'ABS Plastic Yellow']
 
     bpy.props.abs_mats_transparent = [
-        'ABS Plastic Trans-Clear',
-        'ABS Plastic Trans-Yellowish Clear',
-        'ABS Plastic Trans-Light Blue',
         'ABS Plastic Trans-Blue',
+        'ABS Plastic Trans-Bright Orange',
+        'ABS Plastic Trans-Clear',
         'ABS Plastic Trans-Green',
+        'ABS Plastic Trans-Light Blue',
         'ABS Plastic Trans-Light Green',
         'ABS Plastic Trans-Orange',
-        'ABS Plastic Trans-Reddish Orange',
         'ABS Plastic Trans-Red',
-        'ABS Plastic Trans-Yellow']
+        'ABS Plastic Trans-Yellow',
+        'ABS Plastic Trans-Yellowish Clear']
 
     bpy.props.abs_mats_uncommon = [
         'ABS Plastic Bright Green',
@@ -93,13 +92,13 @@ def register():
         'ABS Plastic Bright Pink',
         'ABS Plastic Cool Yellow',
         'ABS Plastic Dark Purple',
-        'ABS Plastic Flesh',
         'ABS Plastic Gold',
         'ABS Plastic Lavender',
         'ABS Plastic Light Blue',
         'ABS Plastic Light Flesh',
         'ABS Plastic Light Pink',
         'ABS Plastic Magenta',
+        'ABS Plastic Medium Dark Flesh',
         'ABS Plastic Medium Lavender',
         'ABS Plastic Purple',
         'ABS Plastic Teal']
@@ -145,11 +144,11 @@ def register():
         description="Save ABS Plastic Materials even if they have no users",
         update=toggle_save_datablocks,
         default=True)
-    bpy.types.Scene.import_transparent = BoolProperty(
+    bpy.types.Scene.include_transparent = BoolProperty(
         name="Include Transparent Colors",
         description="Import transparent colors",
         default=False)
-    bpy.types.Scene.import_uncommon = BoolProperty(
+    bpy.types.Scene.include_uncommon = BoolProperty(
         name="Include Uncommon Colors",
         description="Save ABS Plastic Materials even if they have no users",
         default=False)

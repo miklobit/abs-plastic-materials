@@ -34,9 +34,12 @@ from mathutils import Vector, Euler
 @persistent
 def handle_upconversion(scene):
     scn = bpy.context.scene
-    # rename outdated 'ABS Plastic Pink' to 'ABS Plastic Bright Pink'
+    # rename outdated ABS Plastic Material names
     pinkMat = bpy.data.materials.get('ABS Plastic Pink')
     if pinkMat is not None:
         pinkMat.name = 'ABS Plastic Bright Pink'
+    orangeMat = bpy.data.materials.get('ABS Plastic Trans-Reddish Orange')
+    if pinkMat is not None:
+        orangeMat.name = 'ABS Plastic Trans-Bright Orange'
 
 bpy.app.handlers.load_post.append(handle_upconversion)
