@@ -148,3 +148,32 @@ def toggle_save_datablocks(self, context):
         mat = bpy.data.materials.get(mat_name)
         if mat is not None:
             mat.use_fake_user = scn.save_datablocks
+
+
+def update_image(self, context):
+    scn = context.scene
+    res = round(scn.uv_detail_quality, 1)
+    resizedImg = getDetailImage(res, bpy.data.images.get("ABS Fingerprints and Dust"))
+    fnode = bpy.data.node_groups.get("ABS_Fingerprint")
+    snode = bpy.data.node_groups.get("ABS_Specular Map")
+    imageNode1 = fnode.nodes.get("ABS_Fingerprints and Dust")
+    imageNode2 = snode.nodes.get("ABS_Fingerprints and Dust")
+    print(resizedImg.name)
+    for img_node in (imageNode1, imageNode2):
+        img_node.image = resizedImg
+
+def getDetailImage(res, full_img):
+    # create smaller fingerprints/dust images
+    newImgName = "ABS Fingerprints and Dust" if res == 1 else "ABS Fingerprints and Dust (%(res)s)" % locals()
+    detail_img_scaled = bpy.data.images.get(newImgName)
+    if detail_img_scaled is None:
+        detail_img_scaled = duplicateImage(full_img, newImgName)
+        newScale = 2000 * res
+        detail_img_scaled.scale(newScale, newScale)
+    return detail_img_scaled
+
+def duplicateImage(img, name):
+    width, height = img.size
+    newImage = bpy.data.images.new(name, width, height)
+    newImage.pixels = img.pixels[:]
+    return newImage

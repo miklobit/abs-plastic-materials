@@ -74,6 +74,12 @@ class ABSPlasticMaterialsPanel(bpy.types.Panel):
         row.prop(scn, "abs_reflect")
         row = col.row(align=True)
         row.prop(scn, "abs_randomize")
+
+
+        row = col.row(align=True)
+        row.label("UV Details:")
+        row = col.row(align=True)
+        row.prop(scn, "uv_detail_quality", text="Quality")
         row = col.row(align=True)
         row.prop(scn, "abs_fingerprints")
         row = col.row(align=True)

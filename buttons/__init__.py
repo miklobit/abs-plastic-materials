@@ -61,7 +61,7 @@ class appendABSPlasticMaterials(bpy.types.Operator):
         failed = []
 
         imagesToReplace = ["ABS Fingerprints and Dust"]
-        nodeGroupsToReplace = ["Dialectric", "Transparent", "Bump", "Uniform Scale"]
+        nodeGroupsToReplace = ["ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "Translate", "RotateZ", "RotateY", "RotateX", "RotateXYZ"]
 
         try:
             # set cm.brickMaterialsAreDirty for all models in Rebrickr, if it's installed
@@ -157,19 +157,17 @@ class appendABSPlasticMaterials(bpy.types.Operator):
 
         # remap node groups to one group
         for groupName in nodeGroupsToReplace:
-            groupName = "ABS_" + groupName
             firstGroup = None
             for g in bpy.data.node_groups:
-                if g is None:
+                if g is None or not g.name.startswith(groupName):
                     continue
-                if g.name.startswith(groupName):
-                    if g.users == 0:
-                        bpy.data.node_groups.remove(g)
-                    elif firstGroup is None:
-                        firstGroup = g
-                    else:
-                        g.user_remap(firstGroup)
-                        bpy.data.node_groups.remove(g)
+                if g.users == 0:
+                    bpy.data.node_groups.remove(g)
+                elif firstGroup is None:
+                    firstGroup = g
+                else:
+                    g.user_remap(firstGroup)
+                    bpy.data.node_groups.remove(g)
             if firstGroup is not None:
                 firstGroup.name = groupName
 

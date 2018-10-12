@@ -69,7 +69,6 @@ def register():
         'ABS Plastic Red',
         'ABS Plastic Sand Blue',
         'ABS Plastic Sand Green',
-        'ABS Plastic Silver',
         'ABS Plastic Tan',
         'ABS Plastic White',
         'ABS Plastic Yellow']
@@ -100,7 +99,7 @@ def register():
         'ABS Plastic Magenta',
         'ABS Plastic Medium Dark Flesh',
         'ABS Plastic Medium Lavender',
-        'ABS Plastic Purple',
+        'ABS Plastic Silver',
         'ABS Plastic Teal']
 
     bpy.types.Scene.abs_subsurf = FloatProperty(
@@ -133,6 +132,13 @@ def register():
         min=0, max=100,
         update=update_abs_displace,
         default=0)
+    bpy.types.Scene.uv_detail_quality = FloatProperty(
+        name="UV Detail Quality",
+        description="Quality of the fingerprints and dust detailing (save memory by reducing quality)",
+        min=0, max=1,
+        precision=1,
+        update=update_image,
+        default=1)
     # bpy.types.Scene.abs_uv_scale = FloatProperty(
     #     name="UV Scale",
     #     description="Update the universal scale of the ",
