@@ -51,7 +51,7 @@ class ABSPlasticMaterialsPanel(bpy.types.Panel):
         col = layout.column(align=True)
         row = col.row(align=True)
         if bpy.context.scene.render.engine == 'CYCLES':
-            row.operator("scene.append_abs_plastic_materials", text="Import ABS Plastic Materials", icon="IMPORT")
+            row.operator("abs.append_materials", text="Import ABS Plastic Materials", icon="IMPORT")
         else:
             row.label("Switch to 'Cycles Render' engine")
         # import settings
