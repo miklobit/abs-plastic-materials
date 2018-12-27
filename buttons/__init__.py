@@ -63,7 +63,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
         imDirectory = "%(blendfile)s/Image/" % locals()
 
         imagesToReplace = ("ABS Fingerprints and Dust")
-        nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "Translate", "RotateZ", "RotateY", "RotateX", "RotateXYZ")
+        nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "Translate", "RotateZ", "RotateY", "RotateX", "RotateXYZ")
 
         # set cm.brickMaterialsAreDirty for all models in Bricker, if it's installed
         if hasattr(scn, "cmlist"):
@@ -172,14 +172,15 @@ class ABS_OT_append_materials(bpy.types.Operator):
         # remap node groups to one group
         for groupName in nodeGroupsToReplace:
             firstGroup = None
+            startingName = groupName
             for g in bpy.data.node_groups:
-                if g is None or not g.name.startswith(groupName):
+                if g is None or not g.name.startswith(startingName):
                     continue
                 if g.users == 0:
                     bpy.data.node_groups.remove(g)
                 elif firstGroup is None:
                     firstGroup = g
-                else:
+                elif g.name[-4] == ".":
                     g.user_remap(firstGroup)
                     bpy.data.node_groups.remove(g)
             if firstGroup is not None:
