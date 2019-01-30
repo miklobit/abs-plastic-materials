@@ -158,6 +158,9 @@ def register():
     # Add attribute for Bricker addon
     bpy.types.Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
+    # register app handlers
+    bpy.app.handlers.load_post.append(handle_upconversion)
+
     # addon updater code and configurations
     addon_updater_ops.register(bl_info)
 
@@ -167,6 +170,9 @@ def unregister():
 
     # addon updater unregister
     addon_updater_ops.unregister()
+
+    # unregister app handlers
+    bpy.app.handlers.load_post.remove(handle_upconversion)
 
     del Scn.isBrickMaterialsInstalled
     del Scn.abs_subsurf

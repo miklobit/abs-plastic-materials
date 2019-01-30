@@ -37,5 +37,3 @@ def handle_upconversion(scene):
     orangeMat = bpy.data.materials.get('ABS Plastic Trans-Reddish Orange')
     if orangeMat is not None:
         orangeMat.name = 'ABS Plastic Trans-Bright Orange'
-
-bpy.app.handlers.load_post.append(handle_upconversion)
