@@ -56,11 +56,10 @@ class ABS_OT_append_materials(bpy.types.Operator):
         failed = []
 
         # define file paths
-        # addonsPath = bpy.utils.user_resource('SCRIPTS', "addons")
-        addonPath = os.path.dirname(os.path.abspath(__file__))[:-8]
-        blendfile = "%(addonPath)s/abs_plastic_materials.blend" % locals()
-        nodeDirectory = "%(blendfile)s/NodeTree/" % locals()
-        imDirectory = "%(blendfile)s/Image/" % locals()
+        addonPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        blendfile = os.path.join(addonPath, "abs_plastic_materials.blend")
+        nodeDirectory = os.path.join(blendfile, "NodeTree")
+        imDirectory = os.path.join(blendfile, "Image")
 
         imagesToReplace = ("ABS Fingerprints and Dust")
         nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "Translate", "RotateZ", "RotateY", "RotateX", "RotateXYZ")
