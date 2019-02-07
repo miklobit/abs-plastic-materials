@@ -139,7 +139,10 @@ class ABS_OT_append_materials(bpy.types.Operator):
             # set properties
             if mat_name in mat_properties.keys():
                 for k in mat_properties[mat_name].keys():
-                    n_shader.inputs[k].default_value = mat_properties[mat_name][k]
+                    try:
+                        n_shader.inputs[k].default_value = mat_properties[mat_name][k]
+                    except KeyError:
+                        pass
 
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
