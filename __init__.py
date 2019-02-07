@@ -18,7 +18,7 @@
 bl_info = {
     "name"        : "ABS Plastic Materials",
     "author"      : "Christopher Gearhart <chris@bblanimation.com>",
-    "version"     : (2, 0, 0),
+    "version"     : (2, 0, 1),
     "blender"     : (2, 79, 0),
     "description" : "Append ABS Plastic Materials to current blender file with a simple click",
     "location"    : "PROPERTIES > Materials > ABS Plastic Materials",
