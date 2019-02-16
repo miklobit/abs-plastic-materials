@@ -127,7 +127,7 @@ def register():
         description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped)",
         min=0, max=100,
         update=update_abs_displace,
-        default=0)
+        default=0.001)
     bpy.types.Scene.uv_detail_quality = FloatProperty(
         name="UV Detail Quality",
         description="Quality of the fingerprints and dust detailing (save memory by reducing quality)",
