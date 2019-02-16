@@ -112,10 +112,13 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_shader = nodes.new("ShaderNodeGroup")
             if mat_name.startswith("ABS Plastic Trans-"):
                 n_shader.node_tree = bpy.data.node_groups.get("ABS_Transparent")
+                n_shader.name = "ABS Transparent"
             else:
                 n_shader.node_tree = bpy.data.node_groups.get("ABS_Dialectric")
+                n_shader.name = "ABS Dialectric"
             n_bump = nodes.new("ShaderNodeGroup")
             n_bump.node_tree = bpy.data.node_groups.get("ABS_Bump")
+            n_bump.name = "ABS Bump"
             n_scale = nodes.new("ShaderNodeGroup")
             n_scale.node_tree = bpy.data.node_groups.get("ABS_Uniform Scale")
             n_uv = nodes.new("ShaderNodeUVMap")

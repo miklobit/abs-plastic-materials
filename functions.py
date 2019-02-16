@@ -22,6 +22,7 @@ from bpy.props import *
 # Addon imports
 # NONE!
 
+
 def getMatNames(all=False):
     scn = bpy.context.scene
     materials = bpy.props.abs_mats_common.copy()
@@ -101,7 +102,6 @@ def update_abs_fingerprints(self, context):
         input2.default_value = scn.abs_fingerprints * scn.abs_displace
 
 
-
 def update_abs_displace(self, context):
     scn = context.scene
     for mat_name in getMatNames(all=True):
@@ -158,6 +158,7 @@ def update_image(self, context):
     for img_node in (imageNode1, imageNode2):
         img_node.image = resizedImg
 
+
 def getDetailImage(res, full_img):
     # create smaller fingerprints/dust images
     newImgName = "ABS Fingerprints and Dust" if res == 1 else "ABS Fingerprints and Dust (%(res)s)" % locals()
@@ -167,6 +168,7 @@ def getDetailImage(res, full_img):
         newScale = 2000 * res
         detail_img_scaled.scale(newScale, newScale)
     return detail_img_scaled
+
 
 def duplicateImage(img, name):
     width, height = img.size
