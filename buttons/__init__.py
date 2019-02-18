@@ -58,12 +58,11 @@ class ABS_OT_append_materials(bpy.types.Operator):
 
         # define file paths
         addonPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        blendfile = os.path.join(addonPath, "abs_plastic_materials.blend")
+        blendfile = os.path.join(addonPath, "lib", "node_groups.blend")
         nodeDirectory = os.path.join(blendfile, "NodeTree")
-        imDirectory = os.path.join(blendfile, "Image")
 
         imagesToReplace = ("ABS Fingerprints and Dust")
-        nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "Translate", "RotateZ", "RotateY", "RotateX", "RotateXYZ")
+        nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "ABS_Translate")
 
         # set cm.brickMaterialsAreDirty for all models in Bricker, if it's installed
         if hasattr(scn, "cmlist"):
@@ -85,12 +84,17 @@ class ABS_OT_append_materials(bpy.types.Operator):
         if current_mode == "EDIT_MESH":
             bpy.ops.object.mode_set(mode="OBJECT")
 
-        # append node groups from nodeDirectory
-        group_names = ("ABS_Bump", "ABS_Dialectric", "ABS_Transparent", "ABS_Uniform Scale")
-        for gn in group_names:
-            appendFrom(nodeDirectory, filename=gn)
-        # append fingerprints and dust image from imDirectory
-        appendFrom(imDirectory, filename="ABS Fingerprints and Dust")
+        # load node groups and image from 'node_groups.blend'
+        with bpy.data.libraries.load(blendfile) as (data_from, data_to):
+            for attr in ("node_groups", "images"):
+                setattr(data_to, attr, getattr(data_from, attr))
+        # map image nodes to correct image data block
+        im = bpy.data.images.get("ABS Fingerprints and Dust")
+        for gn in ("ABS_Fingerprint", "ABS_Specular Map"):
+            ng = bpy.data.node_groups.get(gn)
+            for node in ng.nodes:
+                if node.type == "TEX_IMAGE":
+                    node.image = im
 
         for mat_name in mat_names:
             # if material exists, remove or skip
@@ -126,8 +130,8 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_uv = nodes.new("ShaderNodeUVMap")
             n_obj_info = nodes.new("ShaderNodeObjectInfo")
             n_translate = nodes.new("ShaderNodeGroup")
-            n_translate.node_tree = bpy.data.node_groups.get("Translate")
-            n_translate.name = "Translate"
+            n_translate.node_tree = bpy.data.node_groups.get("ABS_Translate")
+            n_translate.name = "ABS_Translate"
             n_output = nodes.get("Material Output")
 
             # connect the nodes together
