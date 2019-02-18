@@ -138,6 +138,18 @@ def update_abs_displace(self, context):
             links.new(target_node.outputs["Color"], displace)
 
 
+def update_abs_uv_scale(self, context):
+    scn = context.scene
+    for mat_name in getMatNames(all=True):
+        mat = bpy.data.materials.get(mat_name)
+        if mat is None:
+            continue
+        n_scale = mat.node_tree.nodes.get("ABS Uniform Scale")
+        if n_scale is None:
+            continue
+        n_scale.inputs[0].default_value = scn.abs_uv_scale
+
+
 def toggle_save_datablocks(self, context):
     scn = context.scene
     for mat_name in getMatNames(all=True):
@@ -154,7 +166,6 @@ def update_image(self, context):
     snode = bpy.data.node_groups.get("ABS_Specular Map")
     imageNode1 = fnode.nodes.get("ABS_Fingerprints and Dust")
     imageNode2 = snode.nodes.get("ABS_Fingerprints and Dust")
-    print(resizedImg.name)
     for img_node in (imageNode1, imageNode2):
         img_node.image = resizedImg
 

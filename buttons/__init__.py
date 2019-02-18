@@ -54,6 +54,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
         alreadyImported = [mn for mn in mat_names if bpy.data.materials.get(mn) is not None]
         matsToReplace = []
         failed = []
+        orig_selection = list(bpy.context.selected_objects)
 
         # define file paths
         addonPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -121,14 +122,22 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_bump.name = "ABS Bump"
             n_scale = nodes.new("ShaderNodeGroup")
             n_scale.node_tree = bpy.data.node_groups.get("ABS_Uniform Scale")
+            n_scale.name = "ABS Uniform Scale"
             n_uv = nodes.new("ShaderNodeUVMap")
+            n_obj_info = nodes.new("ShaderNodeObjectInfo")
+            n_translate = nodes.new("ShaderNodeGroup")
+            n_translate.node_tree = bpy.data.node_groups.get("Translate")
+            n_translate.name = "Translate"
             n_output = nodes.get("Material Output")
 
             # connect the nodes together
             links = m.node_tree.links
             links.new(n_shader.outputs["Shader"], n_output.inputs["Surface"])
             links.new(n_bump.outputs["Color"], n_output.inputs["Displacement"])
-            links.new(n_uv.outputs["UV"], n_scale.inputs["Vector"])
+            links.new(n_uv.outputs["UV"], n_translate.inputs["Vector"])
+            links.new(n_obj_info.outputs["Random"], n_translate.inputs["X"])
+            links.new(n_obj_info.outputs["Random"], n_translate.inputs["Y"])
+            links.new(n_translate.outputs["Vector"], n_scale.inputs["Vector"])
             links.new(n_scale.outputs["Vector"], n_shader.inputs["Vector"])
             links.new(n_scale.outputs["Vector"], n_bump.inputs["Vector"])
 
@@ -137,7 +146,9 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_shader.location = n_output.location - Vector((200, -250))
             n_bump.location = n_output.location - Vector((200, 200))
             n_scale.location = n_output.location - Vector((400, 200))
-            n_uv.location = n_output.location - Vector((600, 200))
+            n_translate.location = n_output.location - Vector((600, 200))
+            n_obj_info.location = n_output.location - Vector((775, 50))
+            n_uv.location = n_output.location - Vector((800, 200))
 
             # set properties
             if mat_name in mat_properties.keys():
@@ -200,5 +211,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             self.report({"INFO"}, "The following Materials failed to import (try reinstalling the addon): " + str(failed)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
         else:
             self.report({"INFO"}, "Materials imported successfully!")
+
+        select(orig_selection)
 
         return{"FINISHED"}
