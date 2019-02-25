@@ -161,6 +161,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
                         n_shader.inputs[k].default_value = mat_properties[mat_name][k]
                     except KeyError:
                         pass
+            m.diffuse_color = mat_properties[mat_name]["Diffuse Color"][:3]
 
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
