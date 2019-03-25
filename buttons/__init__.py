@@ -113,7 +113,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
 
             # create/get all necessary nodes
             nodes = m.node_tree.nodes
-            nodes.remove(nodes.get("Diffuse BSDF"))
+            nodes.remove(nodes.get("Principled BSDF" if b280() else "Diffuse BSDF"))
             n_shader = nodes.new("ShaderNodeGroup")
             if mat_name.startswith("ABS Plastic Trans-"):
                 n_shader.node_tree = bpy.data.node_groups.get("ABS_Transparent")
@@ -127,6 +127,8 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_scale = nodes.new("ShaderNodeGroup")
             n_scale.node_tree = bpy.data.node_groups.get("ABS_Uniform Scale")
             n_scale.name = "ABS Uniform Scale"
+            if b280():
+                n_displace = nodes.new("ShaderNodeDisplacement")
             n_uv = nodes.new("ShaderNodeUVMap")
             n_obj_info = nodes.new("ShaderNodeObjectInfo")
             n_translate = nodes.new("ShaderNodeGroup")
@@ -137,11 +139,17 @@ class ABS_OT_append_materials(bpy.types.Operator):
             # connect the nodes together
             links = m.node_tree.links
             links.new(n_shader.outputs["Shader"], n_output.inputs["Surface"])
+            if b280():
+                links.new(n_displace.outputs["Displacement"], n_output.inputs["Displacement"])
+                links.new(n_bump.outputs["Color"], n_displace.inputs["Height"])
+            links.new(n_uv.outputs["UV"], n_scale.inputs["Vector"])
             links.new(n_bump.outputs["Color"], n_output.inputs["Displacement"])
-            links.new(n_uv.outputs["UV"], n_translate.inputs["Vector"])
-            links.new(n_obj_info.outputs["Random"], n_translate.inputs["X"])
-            links.new(n_obj_info.outputs["Random"], n_translate.inputs["Y"])
-            links.new(n_translate.outputs["Vector"], n_scale.inputs["Vector"])
+            if not b280():
+                # TODO: use ABS_Translate node below in b280
+                links.new(n_uv.outputs["UV"], n_translate.inputs["Vector"])
+                links.new(n_obj_info.outputs["Random"], n_translate.inputs["X"])
+                links.new(n_obj_info.outputs["Random"], n_translate.inputs["Y"])
+                links.new(n_translate.outputs["Vector"], n_scale.inputs["Vector"])
             links.new(n_scale.outputs["Vector"], n_shader.inputs["Vector"])
             links.new(n_scale.outputs["Vector"], n_bump.inputs["Vector"])
 
@@ -149,6 +157,8 @@ class ABS_OT_append_materials(bpy.types.Operator):
             starting_loc = n_output.location
             n_shader.location = n_output.location - Vector((200, -250))
             n_bump.location = n_output.location - Vector((200, 200))
+            if b280():
+                n_displace.location = n_output.location - Vector((200, 200))
             n_scale.location = n_output.location - Vector((400, 200))
             n_translate.location = n_output.location - Vector((600, 200))
             n_obj_info.location = n_output.location - Vector((775, 50))
@@ -161,7 +171,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
                         n_shader.inputs[k].default_value = mat_properties[mat_name][k]
                     except KeyError:
                         pass
-            m.diffuse_color = mat_properties[mat_name]["Color" if mat_name.startswith("ABS Plastic Trans-") else "Diffuse Color"][:3]
+            m.diffuse_color = mat_properties[mat_name]["Color" if mat_name.startswith("ABS Plastic Trans-") else "Diffuse Color"][:4 if b280() else 3]
 
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
