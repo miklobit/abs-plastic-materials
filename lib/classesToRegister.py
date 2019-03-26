@@ -27,16 +27,6 @@ from .. import addon_updater_ops
 
 
 classes = (
-    # abs_plastic_materials/addon_updater_ops.py
-    addon_updater_ops.OBJECT_OT_addon_updater_install_popup,
-    addon_updater_ops.OBJECT_OT_addon_updater_check_now,
-    addon_updater_ops.OBJECT_OT_addon_updater_update_now,
-    addon_updater_ops.OBJECT_OT_addon_updater_update_target,
-    addon_updater_ops.OBJECT_OT_addon_updater_install_manually,
-    addon_updater_ops.OBJECT_OT_addon_updater_updated_successful,
-    addon_updater_ops.OBJECT_OT_addon_updater_restore_backup,
-    addon_updater_ops.OBJECT_OT_addon_updater_ignore,
-    addon_updater_ops.OBJECT_OT_addon_updater_end_background,
     # abs_plastic_materials/buttons
     ABS_OT_append_materials,
     # abs_plastic_materials/lib
