@@ -52,7 +52,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
         scn = context.scene
         mat_names = getMatNames()  # list of materials to append from 'abs_plastic_materials.blend'
         alreadyImported = [mn for mn in mat_names if bpy.data.materials.get(mn) is not None]
-        matsToReplace = []
+        self.matsToReplace = []
         failed = []
         orig_selection = list(bpy.context.selected_objects)
 
@@ -70,14 +70,14 @@ class ABS_OT_append_materials(bpy.types.Operator):
                 if cm.materialType == "Random":
                     cm.brickMaterialsAreDirty = True
 
-        # remove existing bump/specular maps
-        for im in bpy.data.images:
-            if im.name in imagesToReplace:
-                bpy.data.images.remove(im)
         # remove old existing node groups
         for ng in bpy.data.node_groups:
             if ng.name.startswith("ABS_") and ng.name[4:] in nodeGroupsToReplace:
                 bpy.data.node_groups.remove(ng)
+        # remove existing bump/specular maps
+        for im in bpy.data.images:
+            if im.name in imagesToReplace:
+                bpy.data.images.remove(im)
 
         # temporarily switch to object mode
         current_mode = str(bpy.context.mode)
@@ -90,6 +90,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
                 setattr(data_to, attr, getattr(data_from, attr))
         # map image nodes to correct image data block
         im = bpy.data.images.get("ABS Fingerprints and Dust")
+        im.update()
         for gn in ("ABS_Fingerprint", "ABS_Specular Map"):
             ng = bpy.data.node_groups.get(gn)
             for node in ng.nodes:
@@ -102,7 +103,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             if m is not None:
                 # mark material to replace
                 m.name = m.name + "__replaced"
-                matsToReplace.append(m)
+                self.matsToReplace.append(m)
 
             # get the current length of bpy.data.materials
             last_len_mats = len(bpy.data.materials)
@@ -176,17 +177,17 @@ class ABS_OT_append_materials(bpy.types.Operator):
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
                 self.report({"WARNING"}, "'%(mat_name)s' could not be imported. Try reinstalling the addon." % locals())
-                if m in matsToReplace:
-                    matsToReplace.remove(m)
+                if m in self.matsToReplace:
+                    self.matsToReplace.remove(m)
                 failed.append(mat_name)
                 continue
 
         # replace old material node trees
-        for old_mat in matsToReplace:
+        for old_mat in self.matsToReplace:
             origName = old_mat.name.split("__")[0]
             new_mat = bpy.data.materials.get(origName)
             old_mat.user_remap(new_mat)
-            bpy.data.materials.remove(old_mat)
+            # bpy.data.materials.remove(old_mat)
 
         # switch back to last mode
         if current_mode == "EDIT_MESH":
@@ -229,4 +230,4 @@ class ABS_OT_append_materials(bpy.types.Operator):
 
         select(orig_selection)
 
-        return{"FINISHED"}
+        return {"FINISHED"}
