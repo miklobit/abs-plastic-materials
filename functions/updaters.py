@@ -162,9 +162,11 @@ def toggle_save_datablocks(self, context):
 
 
 def update_image(self, context):
+    im = bpy.data.images.get("ABS Fingerprints and Dust")
+    if im is None: return
     scn = context.scene
     res = round(scn.uv_detail_quality, 1)
-    resizedImg = getDetailImage(res, bpy.data.images.get("ABS Fingerprints and Dust"))
+    resizedImg = getDetailImage(res, im)
     fnode = bpy.data.node_groups.get("ABS_Fingerprint")
     snode = bpy.data.node_groups.get("ABS_Specular Map")
     imageNode1 = fnode.nodes.get("ABS_Fingerprints and Dust")
