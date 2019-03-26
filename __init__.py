@@ -18,7 +18,7 @@
 bl_info = {
     "name"        : "ABS Plastic Materials",
     "author"      : "Christopher Gearhart <chris@bblanimation.com>",
-    "version"     : (2, 0, 2),
+    "version"     : (2, 0, 1),
     "blender"     : (2, 80, 0),
     "description" : "Append ABS Plastic Materials to current blender file with a simple click",
     "location"    : "PROPERTIES > Materials > ABS Plastic Materials",
@@ -30,7 +30,7 @@ bl_info = {
 # Blender imports
 import bpy
 from bpy.props import *
-from bpy.types import Scene
+from bpy.types import Scene, Material
 from bpy.utils import register_class, unregister_class
 props = bpy.props
 
@@ -46,6 +46,7 @@ def register():
         bpy.utils.register_class(cls)
 
     bpy.props.abs_plastic_materials_module_name = __name__
+    bpy.props.abs_plastic_version = str(bl_info["version"])[1:-1].replace(", ", ".")
 
     bpy.props.abs_mats_common = [
         'ABS Plastic Black',
@@ -156,6 +157,9 @@ def register():
         description="Save ABS Plastic Materials even if they have no users",
         default=False)
 
+    # Attribute for tracking version
+    Material.abs_plastic_version = StringProperty(default="")
+
     # Add attribute for Bricker addon
     Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
 
@@ -176,6 +180,7 @@ def unregister():
     bpy.app.handlers.load_post.remove(handle_upconversion)
 
     del Scene.isBrickMaterialsInstalled
+    del Material.abs_plastic_version
     del Scene.include_uncommon
     del Scene.include_transparent
     del Scene.save_datablocks
@@ -188,6 +193,7 @@ def unregister():
     del bpy.props.abs_mats_uncommon
     del bpy.props.abs_mats_transparent
     del bpy.props.abs_mats_common
+    del bpy.props.abs_plastic_version
     del bpy.props.abs_plastic_materials_module_name
 
     for cls in reversed(classesToRegister.classes):

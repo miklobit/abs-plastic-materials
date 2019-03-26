@@ -61,6 +61,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
         blendfile = os.path.join(addonPath, "lib", "node_groups.blend")
         nodeDirectory = os.path.join(blendfile, "NodeTree")
 
+        # define images and node groups to replace
         imagesToReplace = ("ABS Fingerprints and Dust")
         nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "ABS_Translate")
 
@@ -70,37 +71,31 @@ class ABS_OT_append_materials(bpy.types.Operator):
                 if cm.materialType == "Random":
                     cm.brickMaterialsAreDirty = True
 
-        # remove old existing node groups
-        for ng in bpy.data.node_groups:
-            if ng.name.startswith("ABS_") and ng.name[4:] in nodeGroupsToReplace:
-                bpy.data.node_groups.remove(ng)
-        # remove existing bump/specular maps
-        for im in bpy.data.images:
-            if im.name in imagesToReplace:
-                bpy.data.images.remove(im)
-
-        # temporarily switch to object mode
-        current_mode = str(bpy.context.mode)
-        if current_mode == "EDIT_MESH":
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-        # load node groups and image from 'node_groups.blend'
-        with bpy.data.libraries.load(blendfile) as (data_from, data_to):
-            for attr in ("node_groups", "images"):
-                setattr(data_to, attr, getattr(data_from, attr))
-        # map image nodes to correct image data block
-        im = bpy.data.images.get("ABS Fingerprints and Dust")
-        im.update()
-        for gn in ("ABS_Fingerprint", "ABS_Specular Map"):
-            ng = bpy.data.node_groups.get(gn)
-            for node in ng.nodes:
-                if node.type == "TEX_IMAGE":
-                    node.image = im
+        if len(alreadyImported) == 0 or bpy.data.materials[alreadyImported[0]].abs_plastic_version != bpy.props.abs_plastic_version:
+            # remove existing bump/specular maps
+            for im in bpy.data.images:
+                if im.name in imagesToReplace:
+                    bpy.data.images.remove(im)
+            # load node groups and image from 'node_groups.blend'
+            with bpy.data.libraries.load(blendfile) as (data_from, data_to):
+                for attr in ("node_groups", "images"):
+                    setattr(data_to, attr, getattr(data_from, attr))
+            bpy.data.node_groups["ABS_Transparent"].use_fake_user = True
+            # map image nodes to correct image data block
+            im = bpy.data.images.get("ABS Fingerprints and Dust")
+            im.update()
+            for gn in ("ABS_Fingerprint", "ABS_Specular Map"):
+                ng = bpy.data.node_groups.get(gn)
+                for node in ng.nodes:
+                    if node.type == "TEX_IMAGE":
+                        node.image = im
 
         for mat_name in mat_names:
             # if material exists, remove or skip
             m = bpy.data.materials.get(mat_name)
             if m is not None:
+                if m.abs_plastic_version == bpy.props.abs_plastic_version:
+                    continue
                 # mark material to replace
                 m.name = m.name + "__replaced"
                 self.matsToReplace.append(m)
@@ -111,6 +106,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             # create new material
             m = bpy.data.materials.new(mat_name)
             m.use_nodes = True
+            m.abs_plastic_version = bpy.props.abs_plastic_version
 
             # create/get all necessary nodes
             nodes = m.node_tree.nodes
@@ -187,11 +183,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             origName = old_mat.name.split("__")[0]
             new_mat = bpy.data.materials.get(origName)
             old_mat.user_remap(new_mat)
-            # bpy.data.materials.remove(old_mat)
-
-        # switch back to last mode
-        if current_mode == "EDIT_MESH":
-            bpy.ops.object.mode_set(mode="EDIT")
+            bpy.data.materials.remove(old_mat)
 
         # update subsurf/reflection amounts
         update_abs_subsurf(self, bpy.context)
@@ -206,12 +198,12 @@ class ABS_OT_append_materials(bpy.types.Operator):
             firstGroup = None
             startingName = groupName
             for g in bpy.data.node_groups:
-                if g is None or not g.name.startswith(startingName):
+                if not g.name.startswith(startingName):
                     continue
-                if g.users == 0:
-                    bpy.data.node_groups.remove(g)
-                elif firstGroup is None:
+                if firstGroup is None:
                     firstGroup = g
+                elif g.users == 0:
+                    bpy.data.node_groups.remove(g)
                 elif g.name[-4] == ".":
                     g.user_remap(firstGroup)
                     bpy.data.node_groups.remove(g)
