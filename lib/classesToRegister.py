@@ -42,5 +42,5 @@ classes = (
     # abs_plastic_materials/lib
     ABSPlasticMaterialsPreferences,
     # abs_plastic_materials/ui
-    BRICKER_PT_abs_plastic,
+    PROPERTIES_PT_abs_plastic_materials,
 )

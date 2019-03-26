@@ -35,13 +35,14 @@ from bpy.utils import register_class, unregister_class
 props = bpy.props
 
 # Addon imports
-from .functions.common import *
+from .ui.app_handlers import *
+from .functions import *
 from .lib import preferences, classesToRegister
 from . import addon_updater_ops
 
 def register():
     for cls in classesToRegister.classes:
-        make_annotation(cls)
+        make_annotations(cls)
         bpy.utils.register_class(cls)
 
     bpy.props.abs_plastic_materials_module_name = __name__
