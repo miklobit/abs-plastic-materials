@@ -58,7 +58,8 @@ class ABS_OT_append_materials(bpy.types.Operator):
 
         # define file paths
         addonPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        blendfile = os.path.join(addonPath, "lib", "node_groups.blend")
+        blendFileName = "node_groups_2-8.blend" if b280() else "node_groups_2-7.blend"
+        blendfile = os.path.join(addonPath, "lib", blendFileName)
         nodeDirectory = os.path.join(blendfile, "NodeTree")
 
         # define images and node groups to replace
@@ -76,7 +77,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             for im in bpy.data.images:
                 if im.name in imagesToReplace:
                     bpy.data.images.remove(im)
-            # load node groups and image from 'node_groups.blend'
+            # load node groups and image from 'node_groups_2-??.blend'
             with bpy.data.libraries.load(blendfile) as (data_from, data_to):
                 for attr in ("node_groups", "images"):
                     setattr(data_to, attr, getattr(data_from, attr))
