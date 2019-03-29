@@ -55,6 +55,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
         self.matsToReplace = []
         failed = []
         orig_selection = list(bpy.context.selected_objects)
+        outdated_version = bpy.data.materials[alreadyImported[0]].abs_plastic_version != bpy.props.abs_plastic_version
 
         # define file paths
         addonPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -72,7 +73,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
                 if cm.materialType == "Random":
                     cm.brickMaterialsAreDirty = True
 
-        if len(alreadyImported) == 0 or bpy.data.materials[alreadyImported[0]].abs_plastic_version != bpy.props.abs_plastic_version:
+        if len(alreadyImported) == 0 or outdated_version:
             # remove existing bump/specular maps
             for im in bpy.data.images:
                 if im.name in imagesToReplace:
@@ -95,7 +96,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             # if material exists, remove or skip
             m = bpy.data.materials.get(mat_name)
             if m is not None:
-                if m.abs_plastic_version == bpy.props.abs_plastic_version:
+                if not outdated_version:
                     continue
                 # mark material to replace
                 m.name = m.name + "__replaced"
@@ -197,24 +198,17 @@ class ABS_OT_append_materials(bpy.types.Operator):
         # remap node groups to one group
         for groupName in nodeGroupsToReplace:
             firstGroup = None
-            startingName = groupName
-            for g in bpy.data.node_groups:
-                if not g.name.startswith(startingName):
-                    continue
-                if firstGroup is None:
-                    firstGroup = g
-                elif g.users == 0:
+            groups = [g for g in bpy.data.node_groups if g.name.startswith(groupName)]
+            if len(groups) > 1:
+                for g in groups[:-1]:
+                    g.user_remap(groups[-1])
                     bpy.data.node_groups.remove(g)
-                elif g.name[-4] == ".":
-                    g.user_remap(firstGroup)
-                    bpy.data.node_groups.remove(g)
-            if firstGroup is not None:
-                firstGroup.name = groupName
+                groups[-1].name = groupName
 
         # report status
-        if len(alreadyImported) == len(mat_names):
+        if len(alreadyImported) == len(mat_names) and not outdated_version:
             self.report({"INFO"}, "Materials already imported")
-        elif len(alreadyImported) > 0:
+        elif len(alreadyImported) > 0 and not outdated_version:
             self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
         elif len(failed) > 0:
             self.report({"INFO"}, "The following Materials failed to import (try reinstalling the addon): " + str(failed)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
