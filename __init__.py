@@ -159,7 +159,7 @@ def register():
         default=False)
 
     # Attribute for tracking version
-    Material.abs_plastic_version = StringProperty(default="")
+    Material.abs_plastic_version = StringProperty(default="2.1.0")
 
     # register app handlers
     bpy.app.handlers.load_post.append(handle_upconversion)
