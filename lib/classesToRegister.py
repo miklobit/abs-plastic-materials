@@ -29,6 +29,7 @@ from .. import addon_updater_ops
 classes = (
     # abs_plastic_materials/buttons
     ABS_OT_append_materials,
+    ABS_OT_mark_outdated,
     # abs_plastic_materials/lib
     ABSPlasticMaterialsPreferences,
     # abs_plastic_materials/ui

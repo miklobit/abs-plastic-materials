@@ -23,7 +23,7 @@ import bpy
 from bpy.props import *
 
 # Addon imports
-# NONE!
+from .common import *
 
 
 def getMatNames(all=False):
@@ -127,18 +127,16 @@ def update_abs_displace(self, context):
         scratches.default_value = scn.abs_displace
         fingerprints.default_value = scn.abs_fingerprints * scn.abs_displace
         # disconnect displacement node if not used
-        color_out = target_node.outputs[0]
-        mo_node = nodes.get("Material Output")
-        if mo_node is None:
-            continue
-        displace = mo_node.inputs.get("Displacement")
-        if displace is None:
+        try:
+            displace_in = nodes["Material Output"].inputs["Displacement"]
+            displace_out = nodes["Displacement"].outputs["Displacement"] if b280() else target_node.outputs["Color"]
+        except KeyError:
             continue
         if scn.abs_displace == 0:
-            for l in displace.links:
+            for l in displace_in.links:
                 links.remove(l)
         else:
-            links.new(target_node.outputs["Color"], displace)
+            links.new(displace_out, displace_in)
 
 
 def update_abs_uv_scale(self, context):

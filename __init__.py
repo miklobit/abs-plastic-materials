@@ -26,6 +26,7 @@ bl_info = {
     "wiki_url"    : "https://www.blendermarket.com/products/abs-plastic-materials",
     "tracker_url" : "https://github.com/bblanimation/abs-plastic-materials/issues",
     "category"    : "Materials"}
+# NOTE: Comment out `abs.mark_outdated` ui button
 
 # Blender imports
 import bpy
@@ -49,56 +50,56 @@ def register():
     bpy.props.abs_plastic_version = str(bl_info["version"])[1:-1].replace(", ", ".")
 
     bpy.props.abs_mats_common = [
-        'ABS Plastic Black',
-        'ABS Plastic Blue',
-        'ABS Plastic Brown',
-        'ABS Plastic Dark Azur',
-        'ABS Plastic Dark Blue',
-        'ABS Plastic Dark Brown',
-        'ABS Plastic Dark Green',
-        'ABS Plastic Dark Grey',
-        'ABS Plastic Dark Red',
-        'ABS Plastic Dark Tan',
-        'ABS Plastic Green',
-        'ABS Plastic Light Grey',
-        'ABS Plastic Lime',
-        'ABS Plastic Orange',
-        'ABS Plastic Purple',
-        'ABS Plastic Red',
-        'ABS Plastic Sand Blue',
-        'ABS Plastic Sand Green',
-        'ABS Plastic Tan',
-        'ABS Plastic White',
-        'ABS Plastic Yellow']
+        "ABS Plastic Black",
+        "ABS Plastic Blue",
+        "ABS Plastic Brown",
+        "ABS Plastic Dark Azur",
+        "ABS Plastic Dark Blue",
+        "ABS Plastic Dark Brown",
+        "ABS Plastic Dark Green",
+        "ABS Plastic Dark Grey",
+        "ABS Plastic Dark Red",
+        "ABS Plastic Dark Tan",
+        "ABS Plastic Green",
+        "ABS Plastic Light Grey",
+        "ABS Plastic Lime",
+        "ABS Plastic Orange",
+        "ABS Plastic Purple",
+        "ABS Plastic Red",
+        "ABS Plastic Sand Blue",
+        "ABS Plastic Sand Green",
+        "ABS Plastic Tan",
+        "ABS Plastic White",
+        "ABS Plastic Yellow"]
 
     bpy.props.abs_mats_transparent = [
-        'ABS Plastic Trans-Blue',
-        'ABS Plastic Trans-Bright Orange',
-        'ABS Plastic Trans-Clear',
-        'ABS Plastic Trans-Green',
-        'ABS Plastic Trans-Light Blue',
-        'ABS Plastic Trans-Light Green',
-        'ABS Plastic Trans-Orange',
-        'ABS Plastic Trans-Red',
-        'ABS Plastic Trans-Yellow',
-        'ABS Plastic Trans-Yellowish Clear']
+        "ABS Plastic Trans-Blue",
+        "ABS Plastic Trans-Bright Orange",
+        "ABS Plastic Trans-Clear",
+        "ABS Plastic Trans-Green",
+        "ABS Plastic Trans-Light Blue",
+        "ABS Plastic Trans-Light Green",
+        "ABS Plastic Trans-Orange",
+        "ABS Plastic Trans-Red",
+        "ABS Plastic Trans-Yellow",
+        "ABS Plastic Trans-Yellowish Clear"]
 
     bpy.props.abs_mats_uncommon = [
-        'ABS Plastic Bright Green',
-        'ABS Plastic Bright Light Orange',
-        'ABS Plastic Bright Pink',
-        'ABS Plastic Cool Yellow',
-        'ABS Plastic Dark Purple',
-        'ABS Plastic Gold',
-        'ABS Plastic Lavender',
-        'ABS Plastic Light Blue',
-        'ABS Plastic Light Flesh',
-        'ABS Plastic Light Pink',
-        'ABS Plastic Magenta',
-        'ABS Plastic Medium Dark Flesh',
-        'ABS Plastic Medium Lavender',
-        'ABS Plastic Silver',
-        'ABS Plastic Teal']
+        "ABS Plastic Bright Green",
+        "ABS Plastic Bright Light Orange",
+        "ABS Plastic Bright Pink",
+        "ABS Plastic Cool Yellow",
+        "ABS Plastic Dark Purple",
+        "ABS Plastic Gold",
+        "ABS Plastic Lavender",
+        "ABS Plastic Light Blue",
+        "ABS Plastic Light Flesh",
+        "ABS Plastic Light Pink",
+        "ABS Plastic Magenta",
+        "ABS Plastic Medium Dark Flesh",
+        "ABS Plastic Medium Lavender",
+        "ABS Plastic Silver",
+        "ABS Plastic Teal"]
 
     Scene.abs_subsurf = FloatProperty(
         name="Subsurface Scattering",
@@ -126,10 +127,10 @@ def register():
         default=0.25)
     Scene.abs_displace = FloatProperty(
         name="Displacement",
-        description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped)",
+        description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped; 0.001 recommended)",
         min=0, max=100,
         update=update_abs_displace,
-        default=0.001)
+        default=0.0)
     Scene.uv_detail_quality = FloatProperty(
         name="UV Detail Quality",
         description="Quality of the fingerprints and dust detailing (save memory by reducing quality)",
@@ -160,9 +161,6 @@ def register():
     # Attribute for tracking version
     Material.abs_plastic_version = StringProperty(default="")
 
-    # Add attribute for Bricker addon
-    Scene.isBrickMaterialsInstalled = BoolProperty(default=True)
-
     # register app handlers
     bpy.app.handlers.load_post.append(handle_upconversion)
 
@@ -179,7 +177,6 @@ def unregister():
     # unregister app handlers
     bpy.app.handlers.load_post.remove(handle_upconversion)
 
-    del Scene.isBrickMaterialsInstalled
     del Material.abs_plastic_version
     del Scene.include_uncommon
     del Scene.include_transparent

@@ -53,6 +53,8 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         row = col.row(align=True)
         if bpy.context.scene.render.engine in ("CYCLES", "BLENDER_EEVEE"):
             row.operator("abs.append_materials", text="Import ABS Plastic Materials", icon="IMPORT")
+            row = col.row(align=True)
+            row.operator("abs.mark_outdated", text="Mark Materials as Outdated", icon="LIBRARY_DATA_OVERRIDE")
         else:
             row.label(text="Switch to 'Cycles' or 'Eevee' render engine")
         # import settings

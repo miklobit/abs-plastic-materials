@@ -488,3 +488,11 @@ def make_annotations(cls):
             annotations[k] = v
             delattr(cls, k)
     return cls
+
+
+def appendFrom(directory, filename):
+    filepath = directory + filename
+    bpy.ops.wm.append(
+        filepath=filepath,
+        filename=filename,
+        directory=directory)
