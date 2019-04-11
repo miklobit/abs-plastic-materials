@@ -68,9 +68,13 @@ class ABS_OT_append_materials(bpy.types.Operator):
 
         if len(alreadyImported) == 0 or outdated_version:
             # remove existing bump/specular maps
-            for im in bpy.data.images:
-                if im.name in imagesToReplace:
-                    bpy.data.images.remove(im)
+            for im_name in imagesToReplace:
+                im = bpy.data.images.get(im_name)
+                if im is not None: bpy.data.images.remove(im)
+            # remove existing node groups
+            for ng_name in nodeGroupsToReplace:
+                ng = bpy.data.node_groups.get(ng_name)
+                if ng is not None: bpy.data.node_groups.remove(ng)
             # load node groups and image from 'node_groups_2-??.blend'
             with bpy.data.libraries.load(blendfile) as (data_from, data_to):
                 for attr in ("node_groups", "images"):
@@ -186,15 +190,16 @@ class ABS_OT_append_materials(bpy.types.Operator):
         update_abs_displace(self, bpy.context)
         toggle_save_datablocks(self, bpy.context)
 
-        # remap node groups to one group
-        for groupName in nodeGroupsToReplace:
-            firstGroup = None
-            groups = [g for g in bpy.data.node_groups if g.name.startswith(groupName)]
-            if len(groups) > 1:
-                for g in groups[:-1]:
-                    g.user_remap(groups[-1])
-                    bpy.data.node_groups.remove(g)
-                groups[-1].name = groupName
+        # # remap node groups to one group
+        # for groupName in nodeGroupsToReplace:
+        #     continue
+        #     firstGroup = None
+        #     groups = [g for g in bpy.data.node_groups if g.name.startswith(groupName)]
+        #     if len(groups) > 1:
+        #         for g in groups[:-1]:
+        #             g.user_remap(groups[-1])
+        #             bpy.data.node_groups.remove(g)
+        #         groups[-1].name = groupName
 
         # report status
         if len(alreadyImported) == len(mat_names) and not outdated_version:

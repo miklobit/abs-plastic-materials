@@ -22,6 +22,7 @@ from bpy.types import Panel
 
 # updater import
 from .app_handlers import *
+from ..functions.common import *
 from .. import addon_updater_ops
 
 class PROPERTIES_PT_abs_plastic_materials(Panel):
@@ -54,7 +55,7 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         if bpy.context.scene.render.engine in ("CYCLES", "BLENDER_EEVEE"):
             row.operator("abs.append_materials", text="Import ABS Plastic Materials", icon="IMPORT")
             row = col.row(align=True)
-            row.operator("abs.mark_outdated", text="Mark Materials as Outdated", icon="LIBRARY_DATA_OVERRIDE")
+            row.operator("abs.mark_outdated", text="Mark Materials as Outdated", icon="LIBRARY_DATA_OVERRIDE" if b280() else "GO_LEFT")
         else:
             row.label(text="Switch to 'Cycles' or 'Eevee' render engine")
         # import settings
