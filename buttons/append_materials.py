@@ -50,15 +50,16 @@ class ABS_OT_append_materials(bpy.types.Operator):
         orig_selection = list(bpy.context.selected_objects)
         outdated_version = len(alreadyImported) > 0 and bpy.data.materials[alreadyImported[0]].abs_plastic_version != bpy.props.abs_plastic_version
 
+        # define images and node groups to replace
+        imagesToReplace = ("ABS Fingerprints and Dust",)
+        nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_RotateXYZ", "RotateX", "RotateY", "RotateZ", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "ABS_Translate")
+
         # define file paths
         addonPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         blendFileName = "node_groups_2-8.blend" if b280() else "node_groups_2-7.blend"
         blendfile = os.path.join(addonPath, "lib", blendFileName)
+        im_path = os.path.join(addonPath, "lib", "ABS Fingerprints and Dust.png")
         nodeDirectory = os.path.join(blendfile, "NodeTree")
-
-        # define images and node groups to replace
-        imagesToReplace = ("ABS Fingerprints and Dust")
-        nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_RotateXYZ", "RotateX", "RotateY", "RotateZ", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "ABS_Translate")
 
         # set cm.brickMaterialsAreDirty for all models in Bricker, if it's installed
         if hasattr(scn, "cmlist"):
@@ -67,21 +68,24 @@ class ABS_OT_append_materials(bpy.types.Operator):
                     cm.brickMaterialsAreDirty = True
 
         if len(alreadyImported) == 0 or outdated_version:
-            # remove existing bump/specular maps
-            for im_name in imagesToReplace:
-                im = bpy.data.images.get(im_name)
-                if im is not None: bpy.data.images.remove(im)
             # remove existing node groups
             for ng_name in nodeGroupsToReplace:
                 ng = bpy.data.node_groups.get(ng_name)
                 if ng is not None: bpy.data.node_groups.remove(ng)
-            # load node groups and image from 'node_groups_2-??.blend'
+            # load node groups from 'node_groups_2-??.blend'
             with bpy.data.libraries.load(blendfile) as (data_from, data_to):
-                for attr in ("node_groups", "images"):
+                for attr in ("node_groups",):
                     setattr(data_to, attr, getattr(data_from, attr))
             bpy.data.node_groups["ABS_Transparent"].use_fake_user = True
+            # remove existing bump/specular maps
+            for im_name in imagesToReplace:
+                im = bpy.data.images.get(im_name)
+                if im is not None: bpy.data.images.remove(im)
+            # load image from lib/ folder
+            bpy.ops.image.open(filepath=im_path)
+            im = bpy.data.images.get("ABS Fingerprints and Dust.png")
+            im.name = "ABS Fingerprints and Dust"
             # map image nodes to correct image data block
-            im = bpy.data.images.get("ABS Fingerprints and Dust")
             im.update()
             for gn in ("ABS_Fingerprint", "ABS_Specular Map"):
                 ng = bpy.data.node_groups.get(gn)
