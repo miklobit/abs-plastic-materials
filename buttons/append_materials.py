@@ -26,8 +26,6 @@ from mathutils import Matrix, Vector
 
 # Addon imports
 from ..functions import *
-from ..colors import *
-from ..lib.mat_properties import mat_properties
 
 
 class ABS_OT_append_materials(bpy.types.Operator):
@@ -163,6 +161,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_uv.location = n_output.location - Vector((800, 200))
 
             # set properties
+            mat_properties = bpy.props.abs_mat_properties
             if mat_name in mat_properties.keys():
                 for k in mat_properties[mat_name].keys():
                     try:

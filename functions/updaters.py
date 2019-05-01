@@ -159,6 +159,14 @@ def toggle_save_datablocks(self, context):
             mat.use_fake_user = scn.save_datablocks
 
 
+def update_viewport_transparency(self, context):
+    scn = context.scene
+    for mat_name in bpy.props.abs_mats_transparent:
+        mat = bpy.data.materials.get(mat_name)
+        if mat is not None:
+            mat.diffuse_color[-1] = 0.75 if scn.abs_viewport_transparency else 1
+
+
 def update_image(self, context):
     im = bpy.data.images.get("ABS Fingerprints and Dust")
     if im is None: return

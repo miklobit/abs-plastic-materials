@@ -18,7 +18,7 @@
 bl_info = {
     "name"        : "ABS Plastic Materials",
     "author"      : "Christopher Gearhart <chris@bblanimation.com>",
-    "version"     : (2, 1, 1),
+    "version"     : (2, 1, 2),
     "blender"     : (2, 80, 0),
     "description" : "Append ABS Plastic Materials to current blender file with a simple click",
     "location"    : "PROPERTIES > Materials > ABS Plastic Materials",
@@ -40,6 +40,7 @@ from .ui.app_handlers import *
 from .functions import *
 from .lib import preferences, classesToRegister
 from . import addon_updater_ops
+from .lib.mat_properties import mat_properties
 
 def register():
     for cls in classesToRegister.classes:
@@ -48,6 +49,7 @@ def register():
 
     bpy.props.abs_plastic_materials_module_name = __name__
     bpy.props.abs_plastic_version = str(bl_info["version"])[1:-1].replace(", ", ".")
+    bpy.props.abs_mat_properties = mat_properties
 
     bpy.props.abs_mats_common = [
         "ABS Plastic Black",
@@ -75,6 +77,7 @@ def register():
     bpy.props.abs_mats_transparent = [
         "ABS Plastic Trans-Blue",
         "ABS Plastic Trans-Bright Orange",
+        "ABS Plastic Trans-Brown",
         "ABS Plastic Trans-Clear",
         "ABS Plastic Trans-Green",
         "ABS Plastic Trans-Light Blue",
@@ -149,6 +152,11 @@ def register():
         description="Save ABS Plastic Materials even if they have no users",
         update=toggle_save_datablocks,
         default=True)
+    Scene.abs_viewport_transparency = BoolProperty(
+        name="Viewport Transparency",
+        description="Display trans- materials as partially transparent in the 3D viewport",
+        update=update_viewport_transparency,
+        default=True)
     Scene.include_transparent = BoolProperty(
         name="Include Transparent Colors",
         description="Import transparent colors",
@@ -180,6 +188,7 @@ def unregister():
     del Material.abs_plastic_version
     del Scene.include_uncommon
     del Scene.include_transparent
+    del Scene.abs_viewport_transparency
     del Scene.save_datablocks
     del Scene.uv_detail_quality
     del Scene.abs_displace
@@ -190,6 +199,7 @@ def unregister():
     del bpy.props.abs_mats_uncommon
     del bpy.props.abs_mats_transparent
     del bpy.props.abs_mats_common
+    del bpy.props.abs_mat_properties
     del bpy.props.abs_plastic_version
     del bpy.props.abs_plastic_materials_module_name
 

@@ -26,8 +26,6 @@ from mathutils import Matrix, Vector
 
 # Addon imports
 from ..functions import *
-from ..colors import *
-from ..lib.mat_properties import mat_properties
 
 
 class ABS_OT_mark_outdated(bpy.types.Operator):
