@@ -37,14 +37,14 @@ class ABS_OT_mark_outdated(bpy.types.Operator):
     # @classmethod
     # def poll(self, context):
     #     # TODO: Speed this up
-    #     matNames = getMatNames(all=True)
+    #     matNames = getMatNames()
     #     for mat in bpy.data.materials:
     #         if mat.name in matNames:
     #             return True
     #     return False
 
     def execute(self, context):
-        for mat_n in getMatNames(all=True):
+        for mat_n in getMatNames():
             m = bpy.data.materials.get(mat_n)
             if m is None:
                 continue

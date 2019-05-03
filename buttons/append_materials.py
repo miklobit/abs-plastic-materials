@@ -131,6 +131,8 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_scale.name = "ABS Uniform Scale"
             if b280():
                 n_displace = nodes.new("ShaderNodeDisplacement")
+                n_displace.inputs["Midlevel"].default_value = 0.0
+                n_displace.inputs["Scale"].default_value = 0.1
             n_uv = nodes.new("ShaderNodeUVMap")
             n_obj_info = nodes.new("ShaderNodeObjectInfo")
             n_translate = nodes.new("ShaderNodeGroup")
@@ -189,9 +191,9 @@ class ABS_OT_append_materials(bpy.types.Operator):
             old_mat.user_remap(new_mat)
             bpy.data.materials.remove(old_mat)
 
-        # update subsurf/reflection amounts
+        # update subsurf/roughness/etc. amounts
         update_abs_subsurf(self, bpy.context)
-        update_abs_reflect(self, bpy.context)
+        update_abs_roughness(self, bpy.context)
         update_abs_randomize(self, bpy.context)
         update_abs_fingerprints(self, context)
         update_abs_displace(self, bpy.context)

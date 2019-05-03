@@ -26,19 +26,17 @@ from bpy.props import *
 from .common import *
 
 
-def getMatNames(all=False):
+def getMatNames():
     scn = bpy.context.scene
     materials = bpy.props.abs_mats_common.copy()
-    if scn.include_transparent or all:
-        materials += bpy.props.abs_mats_transparent
-    if scn.include_uncommon or all:
-        materials += bpy.props.abs_mats_uncommon
+    materials += bpy.props.abs_mats_transparent
+    materials += bpy.props.abs_mats_uncommon
     return materials
 
 
 def update_abs_subsurf(self, context):
     scn = context.scene
-    for mat_name in getMatNames(all=True):
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -54,9 +52,9 @@ def update_abs_subsurf(self, context):
         input2.default_value = default_amount * scn.abs_subsurf
 
 
-def update_abs_reflect(self, context):
+def update_abs_roughness(self, context):
     scn = context.scene
-    for mat_name in getMatNames(all=True):
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -64,15 +62,15 @@ def update_abs_reflect(self, context):
         target_node = nodes.get("ABS Dialectric") or nodes.get("ABS Transparent")
         if target_node is None:
             continue
-        input1 = target_node.inputs.get("Reflection")
+        input1 = target_node.inputs.get("Rough 1")
         if input1 is None:
             continue
-        input1.default_value = scn.abs_reflect * (0.4 if mat.name in ["ABS Plastic Silver", "ABS Plastic Gold"] else 0.005)
+        input1.default_value = scn.abs_roughness * (50 if mat.name in ("ABS Plastic Silver", "ABS Plastic Gold") else (3 if mat.name == "ABS Plastic Trans-Yellowish Clear" else 1))
 
 
 def update_abs_randomize(self, context):
     scn = context.scene
-    for mat_name in getMatNames(all=True):
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -88,7 +86,7 @@ def update_abs_randomize(self, context):
 
 def update_abs_fingerprints(self, context):
     scn = context.scene
-    for mat_name in getMatNames(all=True):
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -107,7 +105,7 @@ def update_abs_fingerprints(self, context):
 
 def update_abs_displace(self, context):
     scn = context.scene
-    for mat_name in getMatNames(all=True):
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -141,7 +139,7 @@ def update_abs_displace(self, context):
 
 def update_abs_uv_scale(self, context):
     scn = context.scene
-    for mat_name in getMatNames(all=True):
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -153,7 +151,7 @@ def update_abs_uv_scale(self, context):
 
 def toggle_save_datablocks(self, context):
     scn = context.scene
-    for mat_name in getMatNames(all=True):
+    for mat_name in getMatNames():
         mat = bpy.data.materials.get(mat_name)
         if mat is not None:
             mat.use_fake_user = scn.save_datablocks

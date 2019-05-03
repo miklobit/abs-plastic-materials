@@ -55,12 +55,6 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         row.operator("abs.append_materials", text="Import ABS Plastic Materials", icon="IMPORT")
         # row = col.row(align=True)
         # row.operator("abs.mark_outdated", text="Mark Materials as Outdated", icon="LIBRARY_DATA_OVERRIDE" if b280() else "GO_LEFT")
-        # import settings
-        col = layout.column(align=True)
-        row = col.row(align=True)
-        row.prop(scn, "include_transparent")
-        row = col.row(align=True)
-        row.prop(scn, "include_uncommon")
 
         # material settings
         col = layout.column(align=True)
@@ -68,7 +62,7 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         row = col.row(align=True)
         row.prop(scn, "abs_subsurf")
         row = col.row(align=True)
-        row.prop(scn, "abs_reflect")
+        row.prop(scn, "abs_roughness")
         row = col.row(align=True)
         row.prop(scn, "abs_randomize")
 

@@ -107,43 +107,51 @@ def register():
     Scene.abs_subsurf = FloatProperty(
         name="Subsurface Scattering",
         description="Amount of subsurface scattering for ABS Plastic Materials (higher values up to 1 are more accurate, but increase render times)",
-        min=0, max=10,
+        subtype="FACTOR",
+        min=0, soft_max=1,
         update=update_abs_subsurf,
         default=1)
-    Scene.abs_reflect = FloatProperty(
-        name="Reflection",
-        description="Amount of reflection for ABS Plastic Materials",
-        min=0, max=100,
-        update=update_abs_reflect,
-        default=1)
+    Scene.abs_roughness = FloatProperty(
+        name="Roughness",
+        description="Amount of roughness for the ABS Plastic Materials",
+        subtype="FACTOR",
+        min=0, max=1,
+        precision=3,
+        update=update_abs_roughness,
+        default=0.005)
     Scene.abs_randomize = FloatProperty(
         name="Randomize",
         description="Amount of per-object randomness for ABS Plastic Material colors",
-        min=0, max=1,
+        subtype="FACTOR",
+        min=0, soft_max=1,
         update=update_abs_randomize,
         default=0.02)
     Scene.abs_fingerprints = FloatProperty(
         name="Fingerprints",
         description="Amount of fingerprints and dust to add to the specular map of the ABS Plastic Materials (mesh must be unwrapped)",
+        subtype="FACTOR",
         min=0, max=1,
         update=update_abs_fingerprints,
         default=0.25)
     Scene.abs_displace = FloatProperty(
         name="Displacement",
-        description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped; 0.001 recommended)",
-        min=0, max=100,
+        description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped; 0.002 recommended)",
+        subtype="FACTOR",
+        min=0, soft_max=1,
+        precision=3,
         update=update_abs_displace,
         default=0.0)
     Scene.uv_detail_quality = FloatProperty(
         name="UV Detail Quality",
         description="Quality of the fingerprints and dust detailing (save memory by reducing quality)",
+        subtype="FACTOR",
         min=0, max=1,
         precision=1,
         update=update_image,
         default=1)
     Scene.abs_uv_scale = FloatProperty(
         name="UV Scale",
-        description="Update the universal scale of the ",
+        description="Update the universal scale of the Fingerprints & Dust UV Texture",
         min=0,
         update=update_abs_uv_scale,
         default=1)
@@ -157,14 +165,6 @@ def register():
         description="Display trans- materials as partially transparent in the 3D viewport",
         update=update_viewport_transparency,
         default=True)
-    Scene.include_transparent = BoolProperty(
-        name="Include Transparent Colors",
-        description="Import transparent colors",
-        default=False)
-    Scene.include_uncommon = BoolProperty(
-        name="Include Uncommon Colors",
-        description="Save ABS Plastic Materials even if they have no users",
-        default=False)
 
     # Attribute for tracking version
     Material.abs_plastic_version = StringProperty(default="2.1.0")
@@ -186,15 +186,13 @@ def unregister():
     bpy.app.handlers.load_post.remove(handle_upconversion)
 
     del Material.abs_plastic_version
-    del Scene.include_uncommon
-    del Scene.include_transparent
     del Scene.abs_viewport_transparency
     del Scene.save_datablocks
     del Scene.uv_detail_quality
     del Scene.abs_displace
     del Scene.abs_fingerprints
     del Scene.abs_randomize
-    del Scene.abs_reflect
+    del Scene.abs_roughness
     del Scene.abs_subsurf
     del bpy.props.abs_mats_uncommon
     del bpy.props.abs_mats_transparent
