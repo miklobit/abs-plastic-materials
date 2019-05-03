@@ -34,9 +34,9 @@ class ABS_OT_append_materials(bpy.types.Operator):
     bl_label = "Append ABS Plastic Materials"                                   # display name in the interface.
     bl_options = {"REGISTER", "UNDO"}
 
-    @classmethod
-    def poll(self, context):
-        return context.scene.render.engine in ("CYCLES", "BLENDER_EEVEE")
+    # @classmethod
+    # def poll(self, context):
+    #     return context.scene.render.engine in ("CYCLES", "BLENDER_EEVEE")
 
     def execute(self, context):
         # initialize variables
@@ -47,6 +47,10 @@ class ABS_OT_append_materials(bpy.types.Operator):
         failed = []
         orig_selection = list(bpy.context.selected_objects)
         outdated_version = len(alreadyImported) > 0 and bpy.data.materials[alreadyImported[0]].abs_plastic_version != bpy.props.abs_plastic_version
+
+        # switch to cycles render engine temporarily
+        last_render_engine = scn.render.engine
+        scn.render.engine = "CYCLES"
 
         # define images and node groups to replace
         imagesToReplace = ("ABS Fingerprints and Dust",)
@@ -216,6 +220,8 @@ class ABS_OT_append_materials(bpy.types.Operator):
         else:
             self.report({"INFO"}, "Materials imported successfully!")
 
+        # return to original context
         select(orig_selection)
+        scn.render.engine = last_render_engine
 
         return {"FINISHED"}
