@@ -112,6 +112,10 @@ class ABS_OT_append_materials(bpy.types.Operator):
             m = bpy.data.materials.new(mat_name)
             m.use_nodes = True
             m.abs_plastic_version = bpy.props.abs_plastic_version
+            if mat_name.startswith("ABS Plastic Trans-") and b280():
+                scn.render.engine = "BLENDER_EEVEE"
+                m.use_screen_refraction = True
+                scn.render.engine = "CYCLES"
 
             # create/get all necessary nodes
             nodes = m.node_tree.nodes
@@ -175,6 +179,12 @@ class ABS_OT_append_materials(bpy.types.Operator):
                     except KeyError:
                         pass
             m.diffuse_color = mat_properties[mat_name]["Color" if mat_name.startswith("ABS Plastic Trans-") else "Diffuse Color"][:4 if b280() else 3]
+            if b280() and m.name in ("ABS Plastic Gold", "ABS Plastic Silver"):
+                m.diffuse_color[0] = m.diffuse_color[0] * 1.85
+                m.diffuse_color[1] = m.diffuse_color[1] * 1.85
+                m.diffuse_color[2] = m.diffuse_color[2] * 1.85
+                m.metallic = 1
+                m.roughness = 0.7
 
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:

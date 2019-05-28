@@ -65,7 +65,7 @@ def update_abs_roughness(self, context):
         input1 = target_node.inputs.get("Rough 1")
         if input1 is None:
             continue
-        input1.default_value = scn.abs_roughness * (50 if mat.name in ("ABS Plastic Silver", "ABS Plastic Gold") else (3 if mat.name == "ABS Plastic Trans-Yellowish Clear" else 1))
+        input1.default_value = scn.abs_roughness * (50 if mat.name in ("ABS Plastic Gold", "ABS Plastic Silver") else (3 if mat.name == "ABS Plastic Trans-Yellowish Clear" else 1))
 
 
 def update_abs_randomize(self, context):
@@ -99,7 +99,7 @@ def update_abs_fingerprints(self, context):
         input2 = target_node2.inputs.get("Fingerprints")
         if input1 is None or input2 is None:
             continue
-        input1.default_value = scn.abs_fingerprints if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_fingerprints / 8
+        input1.default_value = scn.abs_fingerprints / (8 if mat.name in ("ABS Plastic Silver", "ABS Plastic Gold") else 1)
         input2.default_value = scn.abs_fingerprints * scn.abs_displace
 
 
@@ -120,7 +120,7 @@ def update_abs_displace(self, context):
         fingerprints = target_node.inputs.get("Fingerprints")
         if noise is None or waves is None or scratches is None or fingerprints is None:
             continue
-        noise.default_value = scn.abs_displace if mat.name not in ["ABS Plastic Silver", "ABS Plastic Gold"] else scn.abs_displace * 20
+        noise.default_value = scn.abs_displace * (20 if mat.name in ("ABS Plastic Gold", "ABS Plastic Silver") else 1)
         waves.default_value = scn.abs_displace
         scratches.default_value = scn.abs_displace
         fingerprints.default_value = scn.abs_fingerprints * scn.abs_displace

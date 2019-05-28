@@ -109,6 +109,7 @@ def register():
         description="Amount of subsurface scattering for ABS Plastic Materials (higher values up to 1 are more accurate, but increase render times)",
         subtype="FACTOR",
         min=0, soft_max=1,
+        precision=3,
         update=update_abs_subsurf,
         default=1)
     Scene.abs_roughness = FloatProperty(
@@ -124,6 +125,7 @@ def register():
         description="Amount of per-object randomness for ABS Plastic Material colors",
         subtype="FACTOR",
         min=0, soft_max=1,
+        precision=3,
         update=update_abs_randomize,
         default=0.02)
     Scene.abs_fingerprints = FloatProperty(
@@ -131,6 +133,7 @@ def register():
         description="Amount of fingerprints and dust to add to the specular map of the ABS Plastic Materials (mesh must be unwrapped)",
         subtype="FACTOR",
         min=0, max=1,
+        precision=3,
         update=update_abs_fingerprints,
         default=0.25)
     Scene.abs_displace = FloatProperty(
