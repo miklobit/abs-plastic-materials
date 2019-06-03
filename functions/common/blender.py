@@ -138,14 +138,14 @@ def selectAll():
     select(bpy.context.scene.objects)
 
 
-def selectVerts(vertList, only:bool=False):
-    """ selects verts in list and deselects the rest """
+def selectGeom(geom, only:bool=False):
+    """ selects verts/edges/faces in list and deselects the rest """
     # confirm vertList is a list of vertices
-    vertList = confirmList(vertList)
+    geom = confirmList(geom)
     # deselect all if selection is exclusive
     if only: deselectAll()
     # select vertices in list
-    for v in vertList:
+    for v in geom:
         if v is not None and not v.select:
             v.select = True
 
@@ -313,7 +313,9 @@ def new_mesh_from_object(obj:Object):
     return bpy.data.meshes.new_from_object(bpy.context.scene, obj, apply_modifiers=True, settings="PREVIEW")
 @blender_version_wrapper(">=", "2.80")
 def new_mesh_from_object(obj:Object):
-    return bpy.data.meshes.new_from_object(obj)
+    depsgraph = bpy.context.view_layer.depsgraph
+    obj_eval = obj.evaluated_get(depsgraph)
+    return bpy.data.meshes.new_from_object(obj_eval)
 
 
 def apply_modifiers(obj:Object):
@@ -321,6 +323,15 @@ def apply_modifiers(obj:Object):
     m = new_mesh_from_object(obj)
     obj.modifiers.clear()
     obj.data = m
+
+
+@blender_version_wrapper('<=','2.79')
+def light_add(type:str='POINT', radius:float=1.0, align:str='WORLD', location:tuple=(0.0, 0.0, 0.0), rotation:tuple=(0.0, 0.0, 0.0)):
+    view_align = align != 'WORLD'
+    bpy.ops.object.lamp_add(type=type, radius=radius, view_align=view_align, location=location, rotation=rotation)
+@blender_version_wrapper('>=','2.80')
+def light_add(type:str='POINT', radius:float=1.0, align:str='WORLD', location:tuple=(0.0, 0.0, 0.0), rotation:tuple=(0.0, 0.0, 0.0)):
+    bpy.ops.object.light_add(type=type, radius=radius, align=align, location=location, rotation=rotation)
 
 
 def is_smoke(ob:Object):
@@ -459,6 +470,15 @@ def update_depsgraph():
 @blender_version_wrapper('>=','2.80')
 def update_depsgraph():
     bpy.context.view_layer.depsgraph.update()
+
+
+@blender_version_wrapper('<=','2.79')
+def right_align(layout_item):
+    pass
+@blender_version_wrapper('>=','2.80')
+def right_align(layout_item):
+    layout_item.use_property_split = True
+    layout_item.use_property_decorate = False
 
 
 def getItemByID(collection:bpy.types.CollectionProperty, id:int):

@@ -27,8 +27,7 @@ from bpy.app.handlers import persistent
 
 
 @persistent
-def handle_upconversion(scene):
-    scn = bpy.context.scene
+def handle_upconversion(scn):
     # rename outdated ABS Plastic Material names
     pinkMat = bpy.data.materials.get('ABS Plastic Pink')
     if pinkMat is not None:

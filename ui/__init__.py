@@ -66,7 +66,7 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         row = col.row(align=True)
         row.prop(scn, "abs_randomize")
 
-
+        col = layout.column(align=True)
         row = col.row(align=True)
         row.label(text="UV Details:")
         row = col.row(align=True)
@@ -77,6 +77,8 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         row.prop(scn, "abs_displace")
         # row = col.row(align=True)
         # row.prop(scn, "abs_uv_scale")
+        col = layout.column(align=True)
+        right_align(col)
         row = col.row(align=True)
         row.prop(scn, "save_datablocks")
         if b280():
