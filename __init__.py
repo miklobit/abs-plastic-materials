@@ -38,12 +38,12 @@ props = bpy.props
 # Addon imports
 from .ui.app_handlers import *
 from .functions import *
-from .lib import preferences, classesToRegister
+from .lib import preferences, classes_to_register
 from . import addon_updater_ops
 from .lib.mat_properties import mat_properties
 
 def register():
-    for cls in classesToRegister.classes:
+    for cls in classes_to_register.classes:
         make_annotations(cls)
         bpy.utils.register_class(cls)
 
@@ -204,7 +204,7 @@ def unregister():
     del bpy.props.abs_plastic_version
     del bpy.props.abs_plastic_materials_module_name
 
-    for cls in reversed(classesToRegister.classes):
+    for cls in reversed(classes_to_register.classes):
         bpy.utils.unregister_class(cls)
 
 
