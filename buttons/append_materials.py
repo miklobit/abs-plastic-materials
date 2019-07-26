@@ -137,7 +137,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
                 n_displace = nodes.new("ShaderNodeDisplacement")
                 n_displace.inputs["Midlevel"].default_value = 0.0
                 n_displace.inputs["Scale"].default_value = 0.1
-            n_uv = nodes.new("ShaderNodeUVMap")
+            n_tex = nodes.new("ShaderNodeTexCoord")
             n_obj_info = nodes.new("ShaderNodeObjectInfo")
             n_translate = nodes.new("ShaderNodeGroup")
             n_translate.node_tree = bpy.data.node_groups.get("ABS_Translate")
@@ -152,7 +152,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             #     links.new(n_displace.outputs["Displacement"], n_output.inputs["Displacement"])
             # else:
             #     links.new(n_bump.outputs["Color"], n_output.inputs["Displacement"])
-            links.new(n_uv.outputs["UV"], n_translate.inputs["Vector"])
+            links.new(n_tex.outputs[scn.abs_mapping], n_translate.inputs["Vector"])
             links.new(n_obj_info.outputs["Random"], n_translate.inputs["X"])
             links.new(n_obj_info.outputs["Random"], n_translate.inputs["Y"])
             links.new(n_translate.outputs["Vector"], n_scale.inputs["Vector"])
@@ -168,7 +168,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_scale.location = n_output.location - Vector((400, 200))
             n_translate.location = n_output.location - Vector((600, 200))
             n_obj_info.location = n_output.location - Vector((775, 50))
-            n_uv.location = n_output.location - Vector((800, 200))
+            n_tex.location = n_output.location - Vector((800, 200))
 
             # set properties
             mat_properties = bpy.props.abs_mat_properties

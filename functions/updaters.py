@@ -164,6 +164,29 @@ def update_viewport_transparency(self, context):
         if mat is not None:
             mat.diffuse_color[-1] = 0.75 if scn.abs_viewport_transparency else 1
 
+def update_texture_mapping(self, context):
+    scn = context.scene
+    for mat_name in getMatNames():
+        mat = bpy.data.materials.get(mat_name)
+        if mat is None:
+            continue
+        n_tex = mat.node_tree.nodes.get("Texture Coordinate")
+        if n_tex is None:
+            continue
+        n_trans = mat.node_tree.nodes.get("ABS_Translate")
+        if n_trans is None:
+            continue
+        links = mat.node_tree.links
+        links.new(n_tex.outputs[scn.abs_mapping], n_trans.inputs[-1])
+    groups_to_update = ("ABS_Fingerprint", "ABS_Specular Map")
+    for ng_name in groups_to_update:
+        ng = bpy.data.node_groups.get(ng_name)
+        if ng is None:
+            continue
+        n_image = ng.nodes.get("ABS_Fingerprints and Dust")
+        n_image.projection = "FLAT" if scn.abs_mapping == "UV" else "BOX"
+
+
 
 def update_image(self, context):
     im = bpy.data.images.get("ABS Fingerprints and Dust")

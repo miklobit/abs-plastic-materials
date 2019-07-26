@@ -75,6 +75,8 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         row.prop(scn, "abs_fingerprints")
         row = col.row(align=True)
         row.prop(scn, "abs_displace")
+        row = col.row(align=True)
+        row.prop(scn, "abs_mapping")
         # row = col.row(align=True)
         # row.prop(scn, "abs_uv_scale")
         row = col.row(align=True)

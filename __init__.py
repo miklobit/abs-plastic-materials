@@ -168,6 +168,15 @@ def register():
         description="Display trans- materials as partially transparent in the 3D viewport",
         update=update_viewport_transparency,
         default=True)
+    Scene.abs_mapping = EnumProperty(
+        name="Texture Mapping",
+        description="The method to use for mapping the fingerprints and dust textures",
+        items=[
+            ("UV", "UV", "Use active UV map"),
+            ("Generated", "Generated", "Use generated texture coordinates"),
+        ],
+        update=update_texture_mapping,
+        default="Generated")
 
     # Attribute for tracking version
     Material.abs_plastic_version = StringProperty(default="2.1.0")
