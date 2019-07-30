@@ -32,7 +32,7 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
     bl_label       = "ABS Plastic Materials"
     bl_idname      = "PROPERTIES_PT_abs_plastic_materials"
     # bl_category    = "ABS Plastic Materials"
-    # COMPAT_ENGINES = {"CYCLES", "BLENDER_EEVEE"}
+    COMPAT_ENGINES = {"CYCLES", "BLENDER_EEVEE"}
 
     # @classmethod
     # def poll(cls, context):
@@ -51,36 +51,68 @@ class PROPERTIES_PT_abs_plastic_materials(Panel):
         addon_updater_ops.update_notice_box_ui(self, context)
 
         col = layout.column(align=True)
-        row = col.row(align=True)
-        row.operator("abs.append_materials", text="Import ABS Plastic Materials", icon="IMPORT")
-        # row = col.row(align=True)
-        # row.operator("abs.mark_outdated", text="Mark Materials as Outdated", icon="LIBRARY_DATA_OVERRIDE" if b280() else "GO_LEFT")
+        col.operator("abs.append_materials", text="Import ABS Plastic Materials", icon="IMPORT")
+        # col.operator("abs.mark_outdated", text="Mark Materials as Outdated", icon="LIBRARY_DATA_OVERRIDE" if b280() else "GO_LEFT")
+
+        col = layout.column(align=True)
+        right_align(col)
+        col.prop(scn, "save_datablocks")
+        if b280():
+            col.prop(scn, "abs_viewport_transparency")
+
+
+class PROPERTIES_PT_abs_plastic_materials_properties(Panel):
+    bl_space_type  = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context     = "material"
+    bl_label       = "Properties" if b280() else "ABS Plastic Properties"
+    bl_parent_id   = "PROPERTIES_PT_abs_plastic_materials"
+    bl_idname      = "PROPERTIES_PT_abs_plastic_materials_properties"
+    # bl_category    = "ABS Plastic Materials"
+    COMPAT_ENGINES = {"CYCLES", "BLENDER_EEVEE"}
+
+    # @classmethod
+    # def poll(cls, context):
+    #     """ ensures operator can execute (if not, returns false) """
+    #     return True
+
+    def draw(self, context):
+        layout = self.layout
+        scn = context.scene
 
         # material settings
-        col = layout.column(align=True)
-        col.label(text="Properties:")
-        row = col.row(align=True)
-        row.prop(scn, "abs_subsurf")
-        row = col.row(align=True)
-        row.prop(scn, "abs_roughness")
-        row = col.row(align=True)
-        row.prop(scn, "abs_randomize")
+        col = layout.column(align=False)
+        right_align(col)
+        # col.label(text="Properties:")
+        col.prop(scn, "abs_subsurf")
+        col.prop(scn, "abs_roughness")
+        col.prop(scn, "abs_fingerprints")
+        col.prop(scn, "abs_randomize")
 
 
-        row = col.row(align=True)
-        row.label(text="UV Details:")
-        row = col.row(align=True)
-        row.prop(scn, "uv_detail_quality", text="Quality")
-        row = col.row(align=True)
-        row.prop(scn, "abs_fingerprints")
-        row = col.row(align=True)
-        row.prop(scn, "abs_displace")
-        row = col.row(align=True)
-        row.prop(scn, "abs_mapping")
-        # row = col.row(align=True)
-        # row.prop(scn, "abs_uv_scale")
-        row = col.row(align=True)
-        row.prop(scn, "save_datablocks")
-        if b280():
-            row = col.row(align=True)
-            row.prop(scn, "abs_viewport_transparency")
+class PROPERTIES_PT_abs_plastic_materials_texture_mapping(Panel):
+    bl_space_type  = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context     = "material"
+    bl_label       = "Texture Map" if b280() else "ABS Plastic Texture Mapping"
+    bl_parent_id   = "PROPERTIES_PT_abs_plastic_materials"
+    bl_idname      = "PROPERTIES_PT_abs_plastic_materials_texture_mapping"
+    # bl_category    = "ABS Plastic Materials"
+    COMPAT_ENGINES = {"CYCLES", "BLENDER_EEVEE"}
+
+    # @classmethod
+    # def poll(cls, context):
+    #     """ ensures operator can execute (if not, returns false) """
+    #     return True
+
+    def draw(self, context):
+        layout = self.layout
+        scn = context.scene
+
+        col = layout.column(align=False)
+        right_align(col)
+        # col.label(text="Texture Mapping:")
+        col.prop(scn, "abs_mapping", text="Mapping")
+        col.prop(scn, "abs_displace")
+        col.prop(scn, "abs_uv_scale", text="Scale")
+        col.prop(scn, "uv_detail_quality", text="Quality")

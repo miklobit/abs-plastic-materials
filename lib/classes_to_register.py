@@ -34,4 +34,6 @@ classes = (
     ABSPlasticMaterialsPreferences,
     # abs_plastic_materials/ui
     PROPERTIES_PT_abs_plastic_materials,
+    PROPERTIES_PT_abs_plastic_materials_properties,
+    PROPERTIES_PT_abs_plastic_materials_texture_mapping,
 )
