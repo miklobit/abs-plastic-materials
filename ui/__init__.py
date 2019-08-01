@@ -69,6 +69,7 @@ class PROPERTIES_PT_abs_plastic_materials_properties(Panel):
     bl_parent_id   = "PROPERTIES_PT_abs_plastic_materials"
     bl_idname      = "PROPERTIES_PT_abs_plastic_materials_properties"
     # bl_category    = "ABS Plastic Materials"
+    bl_options     = {"DEFAULT_CLOSED"}
     COMPAT_ENGINES = {"CYCLES", "BLENDER_EEVEE"}
 
     # @classmethod
@@ -98,6 +99,7 @@ class PROPERTIES_PT_abs_plastic_materials_texture_mapping(Panel):
     bl_parent_id   = "PROPERTIES_PT_abs_plastic_materials"
     bl_idname      = "PROPERTIES_PT_abs_plastic_materials_texture_mapping"
     # bl_category    = "ABS Plastic Materials"
+    bl_options     = {"DEFAULT_CLOSED"}
     COMPAT_ENGINES = {"CYCLES", "BLENDER_EEVEE"}
 
     # @classmethod
