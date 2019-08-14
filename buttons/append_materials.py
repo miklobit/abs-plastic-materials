@@ -41,46 +41,45 @@ class ABS_OT_append_materials(bpy.types.Operator):
     def execute(self, context):
         # initialize variables
         scn = context.scene
-        mat_names = getMatNames()  # list of materials to append from 'abs_plastic_materials.blend'
-        alreadyImported = [mn for mn in mat_names if bpy.data.materials.get(mn) is not None]
-        self.matsToReplace = []
+        mat_names = get_mat_names()  # list of materials to append from 'abs_plastic_materials.blend'
+        already_imported = [mn for mn in mat_names if bpy.data.materials.get(mn) is not None]
+        self.mats_to_replace = []
         failed = []
         orig_selection = list(bpy.context.selected_objects)
-        outdated_version = len(alreadyImported) > 0 and bpy.data.materials[alreadyImported[0]].abs_plastic_version != bpy.props.abs_plastic_version
+        outdated_version = len(already_imported) > 0 and bpy.data.materials[already_imported[0]].abs_plastic_version != bpy.props.abs_plastic_version
 
         # switch to cycles render engine temporarily
         last_render_engine = scn.render.engine
         scn.render.engine = "CYCLES"
 
         # define images and node groups to replace
-        imagesToReplace = ("ABS Fingerprints and Dust",)
-        nodeGroupsToReplace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_RotateXYZ", "RotateX", "RotateY", "RotateZ", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "ABS_Translate")
+        images_to_replace = ("ABS Fingerprints and Dust",)
+        node_groups_to_replace = ("ABS_Absorbtion", "ABS_Basic Noise", "ABS_Bump", "ABS_Dialectric", "ABS_Dialectric 2", "ABS_Fingerprint", "ABS_Fresnel", "ABS_GlassAbsorption", "ABS_Parallel_Scratches", "ABS_PBR Glass", "ABS_Principled", "ABS_Random Value", "ABS_Randomize Color", "ABS_Reflection", "ABS_RotateXYZ", "RotateX", "RotateY", "RotateZ", "ABS_Scale", "ABS_Scratches", "ABS_Specular Map", "ABS_Transparent", "ABS_Uniform Scale", "ABS_Translate")
 
         # define file paths
-        addonPath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        blendFileName = "node_groups_2-8.blend" if b280() else "node_groups_2-7.blend"
-        blendfile = os.path.join(addonPath, "lib", blendFileName)
-        im_path = os.path.join(addonPath, "lib", "ABS Fingerprints and Dust.png")
-        nodeDirectory = os.path.join(blendfile, "NodeTree")
+        addon_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        blend_file_name = "node_groups_2-8.blend" if b280() else "node_groups_2-7.blend"
+        blend_file = os.path.join(addon_path, "lib", blend_file_name)
+        im_path = os.path.join(addon_path, "lib", "ABS Fingerprints and Dust.png")
 
-        # set cm.brickMaterialsAreDirty for all models in Bricker, if it's installed
+        # set cm.brick_materials_are_dirty for all models in Bricker, if it's installed
         if hasattr(scn, "cmlist"):
             for cm in scn.cmlist:
-                if cm.materialType == "Random":
-                    cm.brickMaterialsAreDirty = True
+                if cm.material_type == "Random":
+                    cm.brick_materials_are_dirty = True
 
-        if len(alreadyImported) == 0 or outdated_version:
+        if len(already_imported) == 0 or outdated_version:
             # remove existing node groups
-            for ng_name in nodeGroupsToReplace:
+            for ng_name in node_groups_to_replace:
                 ng = bpy.data.node_groups.get(ng_name)
                 if ng is not None: bpy.data.node_groups.remove(ng)
             # load node groups from 'node_groups_2-??.blend'
-            with bpy.data.libraries.load(blendfile) as (data_from, data_to):
+            with bpy.data.libraries.load(blend_file) as (data_from, data_to):
                 for attr in ("node_groups",):
                     setattr(data_to, attr, getattr(data_from, attr))
             bpy.data.node_groups["ABS_Transparent"].use_fake_user = True
             # remove existing bump/specular maps
-            for im_name in imagesToReplace:
+            for im_name in images_to_replace:
                 im = bpy.data.images.get(im_name)
                 if im is not None: bpy.data.images.remove(im)
             # load image from lib/ folder
@@ -103,7 +102,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
                     continue
                 # mark material to replace
                 m.name = m.name + "__replaced"
-                self.matsToReplace.append(m)
+                self.mats_to_replace.append(m)
 
             # get the current length of bpy.data.materials
             last_len_mats = len(bpy.data.materials)
@@ -189,15 +188,15 @@ class ABS_OT_append_materials(bpy.types.Operator):
             # get compare last length of bpy.data.materials to current (if the same, material not imported)
             if len(bpy.data.materials) == last_len_mats:
                 self.report({"WARNING"}, "'%(mat_name)s' could not be imported. Try reinstalling the addon." % locals())
-                if m in self.matsToReplace:
-                    self.matsToReplace.remove(m)
+                if m in self.mats_to_replace:
+                    self.mats_to_replace.remove(m)
                 failed.append(mat_name)
                 continue
 
         # replace old material node trees
-        for old_mat in self.matsToReplace:
-            origName = old_mat.name.split("__")[0]
-            new_mat = bpy.data.materials.get(origName)
+        for old_mat in self.mats_to_replace:
+            orig_name = old_mat.name.split("__")[0]
+            new_mat = bpy.data.materials.get(orig_name)
             old_mat.user_remap(new_mat)
             bpy.data.materials.remove(old_mat)
 
@@ -210,7 +209,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
         toggle_save_datablocks(self, bpy.context)
 
         # # remap node groups to one group
-        # for groupName in nodeGroupsToReplace:
+        # for groupName in node_groups_to_replace:
         #     continue
         #     firstGroup = None
         #     groups = [g for g in bpy.data.node_groups if g.name.startswith(groupName)]
@@ -221,10 +220,10 @@ class ABS_OT_append_materials(bpy.types.Operator):
         #         groups[-1].name = groupName
 
         # report status
-        if len(alreadyImported) == len(mat_names) and not outdated_version:
+        if len(already_imported) == len(mat_names) and not outdated_version:
             self.report({"INFO"}, "Materials already imported")
-        elif len(alreadyImported) > 0 and not outdated_version:
-            self.report({"INFO"}, "The following Materials were skipped: " + str(alreadyImported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
+        elif len(already_imported) > 0 and not outdated_version:
+            self.report({"INFO"}, "The following Materials were skipped: " + str(already_imported)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
         elif len(failed) > 0:
             self.report({"INFO"}, "The following Materials failed to import (try reinstalling the addon): " + str(failed)[1:-1].replace("'", "").replace("ABS Plastic ", ""))
         elif outdated_version:

@@ -26,7 +26,7 @@ from bpy.props import *
 from .common import *
 
 
-def getMatNames():
+def get_mat_names():
     scn = bpy.context.scene
     materials = bpy.props.abs_mats_common.copy()
     materials += bpy.props.abs_mats_transparent
@@ -36,7 +36,7 @@ def getMatNames():
 
 def update_abs_subsurf(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -54,7 +54,7 @@ def update_abs_subsurf(self, context):
 
 def update_abs_roughness(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -70,7 +70,7 @@ def update_abs_roughness(self, context):
 
 def update_abs_randomize(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -86,7 +86,7 @@ def update_abs_randomize(self, context):
 
 def update_abs_fingerprints(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -105,7 +105,7 @@ def update_abs_fingerprints(self, context):
 
 def update_abs_displace(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -139,7 +139,7 @@ def update_abs_displace(self, context):
 
 def update_abs_uv_scale(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue
@@ -151,7 +151,7 @@ def update_abs_uv_scale(self, context):
 
 def toggle_save_datablocks(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is not None:
             mat.use_fake_user = scn.save_datablocks
@@ -193,28 +193,28 @@ def update_image(self, context):
     if im is None: return
     scn = context.scene
     res = round(scn.uv_detail_quality, 1)
-    resizedImg = getDetailImage(res, im)
+    resized_img = get_detail_image(res, im)
     fnode = bpy.data.node_groups.get("ABS_Fingerprint")
     snode = bpy.data.node_groups.get("ABS_Specular Map")
-    imageNode1 = fnode.nodes.get("ABS_Fingerprints and Dust")
-    imageNode2 = snode.nodes.get("ABS_Fingerprints and Dust")
-    for img_node in (imageNode1, imageNode2):
-        img_node.image = resizedImg
+    image_node1 = fnode.nodes.get("ABS_Fingerprints and Dust")
+    image_node2 = snode.nodes.get("ABS_Fingerprints and Dust")
+    for img_node in (image_node1, image_node2):
+        img_node.image = resized_img
 
 
-def getDetailImage(res, full_img):
+def get_detail_image(res, full_img):
     # create smaller fingerprints/dust images
-    newImgName = "ABS Fingerprints and Dust" if res == 1 else "ABS Fingerprints and Dust (%(res)s)" % locals()
-    detail_img_scaled = bpy.data.images.get(newImgName)
+    new_img_name = "ABS Fingerprints and Dust" if res == 1 else "ABS Fingerprints and Dust (%(res)s)" % locals()
+    detail_img_scaled = bpy.data.images.get(new_img_name)
     if detail_img_scaled is None:
-        detail_img_scaled = duplicateImage(full_img, newImgName)
+        detail_img_scaled = duplicate_image(full_img, new_img_name)
         newScale = 2000 * res
         detail_img_scaled.scale(newScale, newScale)
     return detail_img_scaled
 
 
-def duplicateImage(img, name):
+def duplicate_image(img, name):
     width, height = img.size
-    newImage = bpy.data.images.new(name, width, height)
-    newImage.pixels = img.pixels[:]
-    return newImage
+    new_image = bpy.data.images.new(name, width, height)
+    new_image.pixels = img.pixels[:]
+    return new_image
