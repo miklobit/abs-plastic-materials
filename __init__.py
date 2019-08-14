@@ -18,7 +18,7 @@
 bl_info = {
     "name"        : "ABS Plastic Materials",
     "author"      : "Christopher Gearhart <chris@bblanimation.com>",
-    "version"     : (2, 1, 1),
+    "version"     : (2, 2, 0),
     "blender"     : (2, 80, 0),
     "description" : "Append ABS Plastic Materials to current blender file with a simple click",
     "location"    : "PROPERTIES > Materials > ABS Plastic Materials",
@@ -72,7 +72,8 @@ def register():
         "ABS Plastic Sand Green",
         "ABS Plastic Tan",
         "ABS Plastic White",
-        "ABS Plastic Yellow"]
+        "ABS Plastic Yellow"
+    ]
 
     bpy.props.abs_mats_transparent = [
         "ABS Plastic Trans-Blue",
@@ -85,7 +86,8 @@ def register():
         "ABS Plastic Trans-Orange",
         "ABS Plastic Trans-Red",
         "ABS Plastic Trans-Yellow",
-        "ABS Plastic Trans-Yellowish Clear"]
+        "ABS Plastic Trans-Yellowish Clear"
+    ]
 
     bpy.props.abs_mats_uncommon = [
         "ABS Plastic Bright Green",
@@ -102,7 +104,8 @@ def register():
         "ABS Plastic Medium Dark Flesh",
         "ABS Plastic Medium Lavender",
         "ABS Plastic Silver",
-        "ABS Plastic Teal"]
+        "ABS Plastic Teal"
+    ]
 
     Scene.abs_subsurf = FloatProperty(
         name="Subsurface Scattering",
