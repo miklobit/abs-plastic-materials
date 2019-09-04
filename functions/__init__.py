@@ -16,4 +16,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .common import *
-from .updaters import *
+from .app_handlers import *
+from .property_callbacks import *

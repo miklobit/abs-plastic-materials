@@ -15,8 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = [
-    "preferences",
-    "classes_to_register",
-    "report_error",
-]
+# System imports
+# NONE!
+
+# Blender imports
+import bpy
+from bpy.app.handlers import persistent
+
+# Module imports
+# NONE!
+
+
+@persistent
+def handle_upconversion(scn):
+    # rename outdated ABS Plastic Material names
+    pink_mat = bpy.data.materials.get('ABS Plastic Pink')
+    if pink_mat is not None:
+        pink_mat.name = 'ABS Plastic Bright Pink'
+    orange_mat = bpy.data.materials.get('ABS Plastic Trans-Reddish Orange')
+    if orange_mat is not None:
+        orange_mat.name = 'ABS Plastic Trans-Bright Orange'

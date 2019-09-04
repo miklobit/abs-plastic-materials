@@ -22,7 +22,7 @@
 import bpy
 from bpy.props import *
 
-# Addon imports
+# Module imports
 from .common import *
 
 
@@ -166,7 +166,7 @@ def update_viewport_transparency(self, context):
 
 def update_texture_mapping(self, context):
     scn = context.scene
-    for mat_name in getMatNames():
+    for mat_name in get_mat_names():
         mat = bpy.data.materials.get(mat_name)
         if mat is None:
             continue

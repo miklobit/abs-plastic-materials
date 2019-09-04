@@ -16,22 +16,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # System imports
-import bpy
 import os
 import time
-from mathutils import Matrix, Vector
 
 # Blender imports
-# NONE!
+import bpy
+from bpy.types import Operator
+from mathutils import Matrix, Vector
 
-# Addon imports
+# Module imports
 from ..functions import *
 
 
-class ABS_OT_append_materials(bpy.types.Operator):
-    """Append ABS Plastic Materials from external blender file"""               # blender will use this as a tooltip for menu items and buttons.
-    bl_idname = "abs.append_materials"                                          # unique identifier for buttons and menu items to reference.
-    bl_label = "Append ABS Plastic Materials"                                   # display name in the interface.
+class ABS_OT_append_materials(Operator):
+    """Append ABS Plastic Materials from external blender file"""
+    bl_idname = "abs.append_materials"
+    bl_label = "Append ABS Plastic Materials"
     bl_options = {"REGISTER", "UNDO"}
 
     # @classmethod

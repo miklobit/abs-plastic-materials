@@ -19,19 +19,22 @@ Created by Christopher Gearhart
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# Addon imports
+# Module imports
 from ..ui import *
-from ..buttons import *
+from ..operators import *
 from .preferences import *
+from .report_error import *
 from .. import addon_updater_ops
 
 
 classes = (
-    # abs_plastic_materials/buttons
+    # abs_plastic_materials/operators
     ABS_OT_append_materials,
     ABS_OT_mark_outdated,
     # abs_plastic_materials/lib
     ABSPlasticMaterialsPreferences,
+    SCENE_OT_report_error,
+    SCENE_OT_close_report_error,
     # abs_plastic_materials/ui
     PROPERTIES_PT_abs_plastic_materials,
     PROPERTIES_PT_abs_plastic_materials_properties,

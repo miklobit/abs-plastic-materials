@@ -16,22 +16,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # System imports
-import bpy
 import os
 import time
-from mathutils import Matrix, Vector
 
 # Blender imports
-# NONE!
+import bpy
+from bpy.types import Operator
+from mathutils import Matrix, Vector
 
-# Addon imports
+# Module imports
 from ..functions import *
 
 
-class ABS_OT_mark_outdated(bpy.types.Operator):
-    """Mark ABS Plastic Materials as outdated"""                                # blender will use this as a tooltip for menu items and buttons.
-    bl_idname = "abs.mark_outdated"                                             # unique identifier for buttons and menu items to reference.
-    bl_label = "Mark ABS Plastic Materials Outdated"                            # display name in the interface.
+class ABS_OT_mark_outdated(Operator):
+    """Mark ABS Plastic Materials as outdated"""
+    bl_idname = "abs.mark_outdated"
+    bl_label = "Mark ABS Plastic Materials Outdated"
     bl_options = {"REGISTER", "UNDO"}
 
     # @classmethod

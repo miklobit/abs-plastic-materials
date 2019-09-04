@@ -26,7 +26,9 @@ bl_info = {
     "wiki_url"    : "https://www.blendermarket.com/products/abs-plastic-materials",
     "tracker_url" : "https://github.com/bblanimation/abs-plastic-materials/issues",
     "category"    : "Materials"}
-# NOTE: Comment out `abs.mark_outdated` ui button
+
+# System imports
+# NONE!
 
 # Blender imports
 import bpy
@@ -35,8 +37,8 @@ from bpy.types import Scene, Material
 from bpy.utils import register_class, unregister_class
 props = bpy.props
 
-# Addon imports
-from .ui.app_handlers import *
+# Module imports
+from .functions.app_handlers import *
 from .functions import *
 from .lib import preferences, classes_to_register
 from . import addon_updater_ops
