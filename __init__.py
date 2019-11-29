@@ -172,7 +172,7 @@ def register():
         name="Viewport Transparency",
         description="Display trans- materials as partially transparent in the 3D viewport",
         update=update_viewport_transparency,
-        default=True)
+        default=False)
     Scene.abs_mapping = EnumProperty(
         name="Texture Mapping",
         description="The method to use for mapping the fingerprints and dust textures",
