@@ -133,7 +133,7 @@ def register():
         default=0.02)
     Scene.abs_fingerprints = FloatProperty(
         name="Fingerprints",
-        description="Amount of fingerprints and dust to add to the specular map of the ABS Plastic Materials (mesh must be unwrapped)",
+        description="Amount of fingerprints and dust to add to the specular map of the ABS Plastic Materials",
         subtype="FACTOR",
         min=0, max=1,
         precision=3,
@@ -141,7 +141,7 @@ def register():
         default=0.25)
     Scene.abs_displace = FloatProperty(
         name="Displacement",
-        description="Bumpiness of the ABS Plastic Materials (mesh must be unwrapped; 0.002 recommended)",
+        description="Bumpiness of the ABS Plastic Materials (0.04 recommended)",
         subtype="FACTOR",
         min=0, soft_max=1,
         precision=3,
@@ -160,7 +160,7 @@ def register():
         description="Update the universal scale of the Fingerprints & Dust UV Texture",
         min=0,
         update=update_abs_uv_scale,
-        default=1)
+        default=3)
     Scene.save_datablocks = BoolProperty(
         name="Save Data-Blocks",
         description="Save ABS Plastic Materials even if they have no users",

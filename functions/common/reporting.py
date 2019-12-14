@@ -166,7 +166,7 @@ def bversion(short:bool=True):
 
 
 def b280():
-    return bpy.app.version >= (2,80,0)
+    return bpy.app.version >= (2, 80, 0)
 
 
 def write_error_to_file(error_report_path:str, error_log:str, addon_version:str, github_path:str):

@@ -132,12 +132,19 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_scale = nodes.new("ShaderNodeGroup")
             n_scale.node_tree = bpy.data.node_groups.get("ABS_Uniform Scale")
             n_scale.name = "ABS Uniform Scale"
+            n_scale.inputs[0].default_value = 3
             if b280():
                 n_displace = nodes.new("ShaderNodeDisplacement")
                 n_displace.inputs["Midlevel"].default_value = 0.0
-                n_displace.inputs["Scale"].default_value = 0.1
+                n_displace.inputs["Scale"].default_value = 0.0005
             n_tex = nodes.new("ShaderNodeTexCoord")
+            # if bpy.app.version >= (2, 82, 0):
+            #     n_geometry = nodes.new("ShaderNodeNewGeometry")
+            # else:
             n_obj_info = nodes.new("ShaderNodeObjectInfo")
+            n_math = nodes.new("ShaderNodeMath")
+            n_math.operation = "MULTIPLY"
+            n_math.inputs[1].default_value = 100
             n_translate = nodes.new("ShaderNodeGroup")
             n_translate.node_tree = bpy.data.node_groups.get("ABS_Translate")
             n_translate.name = "ABS_Translate"
@@ -152,8 +159,13 @@ class ABS_OT_append_materials(bpy.types.Operator):
             # else:
             #     links.new(n_bump.outputs["Color"], n_output.inputs["Displacement"])
             links.new(n_tex.outputs[scn.abs_mapping], n_translate.inputs["Vector"])
-            links.new(n_obj_info.outputs["Random"], n_translate.inputs["X"])
-            links.new(n_obj_info.outputs["Random"], n_translate.inputs["Y"])
+            # if bpy.app.version >= (2, 82, 0):
+            #     links.new(n_geometry.outputs["Random Per Island"], n_math.inputs[0])
+            # else:
+            links.new(n_obj_info.outputs["Random"], n_math.inputs[0])
+            links.new(n_math.outputs["Value"], n_translate.inputs["X"])
+            links.new(n_math.outputs["Value"], n_translate.inputs["Y"])
+            links.new(n_math.outputs["Value"], n_translate.inputs["Z"])
             links.new(n_translate.outputs["Vector"], n_scale.inputs["Vector"])
             links.new(n_scale.outputs["Vector"], n_shader.inputs["Vector"])
             links.new(n_scale.outputs["Vector"], n_bump.inputs["Vector"])
@@ -166,7 +178,11 @@ class ABS_OT_append_materials(bpy.types.Operator):
                 n_displace.location = n_output.location - Vector((000, 200))
             n_scale.location = n_output.location - Vector((400, 200))
             n_translate.location = n_output.location - Vector((600, 200))
-            n_obj_info.location = n_output.location - Vector((775, 50))
+            n_math.location = n_output.location - Vector((800, 25))
+            # if bpy.app.version >= (2, 82, 0):
+            #     n_geometry.location = n_output.location - Vector((1000, 25))
+            # else:
+            n_obj_info.location = n_output.location - Vector((1000, 25))
             n_tex.location = n_output.location - Vector((800, 200))
 
             # set properties
