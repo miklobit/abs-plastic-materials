@@ -160,7 +160,7 @@ def register():
         description="Update the universal scale of the Fingerprints & Dust UV Texture",
         min=0,
         update=update_abs_uv_scale,
-        default=3)
+        default=10)
     Scene.save_datablocks = BoolProperty(
         name="Save Data-Blocks",
         description="Save ABS Plastic Materials even if they have no users",

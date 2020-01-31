@@ -132,7 +132,7 @@ class ABS_OT_append_materials(bpy.types.Operator):
             n_scale = nodes.new("ShaderNodeGroup")
             n_scale.node_tree = bpy.data.node_groups.get("ABS_Uniform Scale")
             n_scale.name = "ABS Uniform Scale"
-            n_scale.inputs[0].default_value = 3
+            n_scale.inputs[0].default_value = 10
             if b280():
                 n_displace = nodes.new("ShaderNodeDisplacement")
                 n_displace.inputs["Midlevel"].default_value = 0.0
